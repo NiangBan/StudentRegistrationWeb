@@ -9,7 +9,7 @@ namespace StudentRegistrationWeb.Controllers
     public class StudentController : Controller
     {
         // GET: Student
-        public ActionResult Index()
+        public ActionResult StudentList()
         {
             return View();
         }
