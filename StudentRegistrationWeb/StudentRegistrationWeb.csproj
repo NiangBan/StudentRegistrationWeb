@@ -125,9 +125,15 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SampleController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
+    <Compile Include="Extension\CommonUtils.cs" />
+    <Compile Include="Extension\CryptoUtils.cs" />
+    <Compile Include="Extension\HtmlExtension.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handler\MyCustomRouteHandler.cs" />
+    <Compile Include="Models\QueryStringModel.cs" />
+    <Compile Include="Models\StudentModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2345,7 +2351,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
     <Folder Include="Views\Sample\" />
   </ItemGroup>
   <ItemGroup>

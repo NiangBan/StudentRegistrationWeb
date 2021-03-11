@@ -1,15 +1,72 @@
-﻿
+﻿@using StudentRegistrationWeb.Extension
+@model StudentRegistrationWeb.Models.StudentModel
 @{
     ViewBag.Title = "Student List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="row">
+    
+    <div class="col-12">
+        <form action="@HtmlExtension.GetEncryptLink("GetStudentListSearch", "Student")" method="post" class="form-fileupload" id="fromearch">
+
+            @Html.AntiForgeryToken()
+            @if (!ViewContext.ViewData.ModelState.IsValid)
+            {
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            }
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.StudentName)
+                                @Html.TextBoxFor(model => model.StudentName, new { @id = "txtStudentName", @class = "form-control", @autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.StudentName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.StudentNumber)
+                                @Html.TextBoxFor(model => model.StudentNumber, new { @id = "txtStudentNo", @class = "form-control", @autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.StudentNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FatherName)
+                                @Html.TextBoxFor(model => model.FatherName, new { @id = "txtFatherName", @class = "form-control", @autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.FatherName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Phone)
+                                @Html.TextBoxFor(model => model.Phone, new { @id = "txtPhone", @class = "form-control", @autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-block btn-primary" style="margin-top: 32px; margin-right: 15px" value="Search" @*@Resources.*@ />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+</div>
+<div class="row">
     <div class="col-12">
         <div class="card">
             @*<div class="card-header">
-                <h3 class="card-title">DataTable with minimal features & hover style</h3>
-            </div>*@
+                    <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                </div>*@
             <!-- /.card-header -->
             <div class="card-body">
                 <table id="myTable" class="table table-striped table-bordered">
@@ -17,19 +74,19 @@
                         <tr>
                             <th><input name="select_all" value="1" type="checkbox"></th>
                             <th>Student Id</th>
-                            <th>Student Number</th>
+                            <th>Student Id</th>
                             <th>Name</th>
                             <th>Father Name</th>
                             <th>NRC</th>
                             <th>Phone</th>
                             <th>Email</th>
                             @*<th>DOB</th>
-                            <th>Address</th>*@
-                            <th>University</th>
-                            @*<th>Major</th>
-                            <th>Academic Year</th>*@
+                                <th>Address</th>
+                                <th>University</th>
+                                <th>Major</th>
+                                <th>Academic Year</th>*@
                             <th>Action</th>
-                            
+
                         </tr>
                     </thead>
                     <tbody>
@@ -43,16 +100,16 @@
                             <td>0922445555</td>
                             <td>aye@gmail.com</td>
                             @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
                             <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
                                 <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
                                 <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
                             </td>
-                            
+
                         </tr>
                         <tr>
                             <td></td>
@@ -64,32 +121,12 @@
                             <td>0922445555</td>
                             <td>aye@gmail.com</td>
                             @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
                             <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
-                                <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
-                                <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>1</td>
-                            <td>CS1</td>
-                            <td>Aye Aye</td>
-                            <td>U Aye</td>
-                            <td>12/TaTaNa(N)123455</td>
-                            <td>0922445555</td>
-                            <td>aye@gmail.com</td>
-                            @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
-                            <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
                                 <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
                                 <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
                             </td>
@@ -104,12 +141,12 @@
                             <td>0922445555</td>
                             <td>aye@gmail.com</td>
                             @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
                             <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
                                 <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
                                 <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
                             </td>
@@ -124,12 +161,12 @@
                             <td>0922445555</td>
                             <td>aye@gmail.com</td>
                             @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
                             <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
                                 <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
                                 <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
                             </td>
@@ -144,12 +181,12 @@
                             <td>0922445555</td>
                             <td>aye@gmail.com</td>
                             @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
                             <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
                                 <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
                                 <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
                             </td>
@@ -164,12 +201,12 @@
                             <td>0922445555</td>
                             <td>aye@gmail.com</td>
                             @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
                             <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
                                 <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
                                 <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
                             </td>
@@ -184,12 +221,12 @@
                             <td>0922445555</td>
                             <td>aye@gmail.com</td>
                             @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
                             <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
                                 <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
                                 <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
                             </td>
@@ -204,12 +241,12 @@
                             <td>0922445555</td>
                             <td>aye@gmail.com</td>
                             @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
                             <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
                                 <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
                                 <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
                             </td>
@@ -224,12 +261,12 @@
                             <td>0922445555</td>
                             <td>aye@gmail.com</td>
                             @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
                             <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
                                 <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
                                 <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
                             </td>
@@ -244,17 +281,37 @@
                             <td>0922445555</td>
                             <td>aye@gmail.com</td>
                             @*<td>01-02-2000</td>
-                            <td>Yangon</td>*@
-                            <td>Computer University</td>
-                            @*<td>CS</td>
-                            <td>1st year</td>*@
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
                             <td>
-                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button> 
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
                                 <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
                                 <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
                             </td>
                         </tr>
-                    </tbody>                    
+                        <tr>
+                            <td></td>
+                            <td>1</td>
+                            <td>CS1</td>
+                            <td>Aye Aye</td>
+                            <td>U Aye</td>
+                            <td>12/TaTaNa(N)123455</td>
+                            <td>0922445555</td>
+                            <td>aye@gmail.com</td>
+                            @*<td>01-02-2000</td>
+                                <td>Yangon</td>
+                                <td>Computer University</td>
+                                <td>CS</td>
+                                <td>1st year</td>*@
+                            <td>
+                                <button type="button" id="btnApprove" class="btn btn-success" @*onclick="getApprove(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
+                                <button type="button" id="btnReject" class="btn btn-danger" @*onclick="getReject(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
+                                <button type="button" id="btnDetails" class="btn btn-default" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
             <!-- /.card-body -->
@@ -331,6 +388,10 @@
             {
                 'targets': 1,
                 'visible': false
+                },
+                {
+                    'targets': 0,
+                    'visible': false
                 }],
             dom: 'lBfrtip',
             buttons: [
@@ -372,14 +433,14 @@
                 $row.removeClass('selected');
             }
 
-            checkLength();
+            //checkLength();
             updateDataTableSelectAllCtrl(table);
             e.stopPropagation();
         });
 
         $('#myTable').on('click', 'tbody td, thead th:first-child', function (e) {
             $(this).parent().find('input[type="checkbox"]').trigger('click');
-            checkLength();
+            //checkLength();
         });
 
         $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
@@ -388,16 +449,16 @@
             } else {
                 $('#myTable tbody input[type="checkbox"]:checked').trigger('click');
             }
-            checkLength();
+            //checkLength();
             e.stopPropagation();
         });
 
         table.on('draw', function () {
             updateDataTableSelectAllCtrl(table);
-            checkLength();
+            //checkLength();
         });
 
-        checkLength();
+        //checkLength();
 
         // approve and reject btn click
 
