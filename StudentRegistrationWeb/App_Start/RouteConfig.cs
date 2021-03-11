@@ -19,7 +19,7 @@ namespace StudentRegistrationWeb
                   name: CommonUtils.Secure_Url_Prefix,
                   url: "{urlValues}",
                    //defaults: new { controller = "Login", action = "Login", id = UrlParameter.Optional })
-                    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional })
+                    defaults: new { controller = "Login", action = "Login", id = UrlParameter.Optional })
                   .RouteHandler = new MyCustomRouteHandler();
             //routes.MapRoute(
             //    name: "Default",

@@ -59,7 +59,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Academic Year.
         /// </summary>
@@ -68,7 +68,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("AcademicYear", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Address.
         /// </summary>
@@ -77,7 +77,16 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("Address", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConfirmPassword.
+        /// </summary>
+        public static string ConfirmPassword {
+            get {
+                return ResourceManager.GetString("ConfirmPassword", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Date Of Birth.
         /// </summary>
@@ -86,7 +95,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("DateOfBirth", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
@@ -95,7 +104,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("Email", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Father Name.
         /// </summary>
@@ -104,7 +113,16 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("FatherName", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full Name.
+        /// </summary>
+        public static string FullName {
+            get {
+                return ResourceManager.GetString("FullName", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Gender.
         /// </summary>
@@ -113,7 +131,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("Gender", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Major.
         /// </summary>
@@ -122,7 +140,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("Major", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
@@ -140,7 +158,16 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("NRC", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Phone.
         /// </summary>
@@ -149,7 +176,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("Phone", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Student No..
         /// </summary>
@@ -158,13 +185,22 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("StudentNo", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to University.
         /// </summary>
         public static string University {
             get {
                 return ResourceManager.GetString("University", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Name.
+        /// </summary>
+        public static string UserName {
+            get {
+                return ResourceManager.GetString("UserName", resourceCulture);
             }
         }
     }

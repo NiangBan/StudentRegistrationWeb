@@ -1,0 +1,150 @@
+﻿@model StudentRegistrationWeb.ViewModel.UserViewModel
+@using StudentRegistrationWeb.Extension
+@{
+    Layout = null;
+}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Registration | @ViewBag.Title</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Content/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/Content/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="~/Content/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="~/Content/plugins/jqvmap/jqvmap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Content/css/adminlte.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/Content/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/Content/plugins/daterangepicker/daterangepicker.css">
+    <!-- summernote -->
+    <link rel="stylesheet" href="~/Content/plugins/summernote/summernote-bs4.min.css">
+
+    <!-- DataTables -->
+    @*<link rel="stylesheet" href="~/Scripts/login.css">*@
+    <link rel="stylesheet" href="~/Content/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Content/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Content/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+</head>
+<div class="m-xl-5"><h3>User Registration</h3></div>
+<div class="col-4 offset-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                @*<div class="card-header">
+                        <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                    </div>*@
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <form action="@HtmlExtension.GetEncryptLink("SaveUser", "Login")" method="post" class="form-horizontal" , role="form" id="transferOwnForm">
+                        @Html.AntiForgeryToken()
+                        @if (!ViewContext.ViewData.ModelState.IsValid)
+                        {
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        }
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.UserName)<br />
+                                    @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.UserName)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.FullName)<br />
+                                    @Html.TextBoxFor(model => model.FullName, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.FullName)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Email)<br />
+                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Email)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Password)<br />
+                                    @Html.TextBoxFor(model => model.Password, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Password)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ConfirmPassword)<br />
+                                    @Html.TextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-right">
+                                    <input type="button" class="btn btn-default" onclick="" value="Cancel" />
+                                    <input type="submit" id="btnSave" class="btn btn-primary" value="Save" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+</div>
+<script src="~/Content/plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="~/Content/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- ChartJS -->
+<script src="~/Content/plugins/chart.js/Chart.min.js"></script>
+<!-- Sparkline -->
+@*<script src="~/Content/plugins/sparklines/sparkline.js"></script>*@
+<!-- JQVMap -->
+@*<script src="~/Content/plugins/jqvmap/jquery.vmap.min.js"></script>
+    <script src="~/Content/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>*@
+<!-- jQuery Knob Chart -->
+<script src="~/Content/plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- daterangepicker -->
+<script src="~/Content/plugins/moment/moment.min.js"></script>
+<script src="~/Content/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="~/Content/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Summernote -->
+<script src="~/Content/plugins/summernote/summernote-bs4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="~/Content/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="~/Content/js/adminlte.js"></script>
+<!-- AdminLTE for demo purposes -->
+@*<script src="~/Content/js/demo.js"></script>*@
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+@*<script src="~/Content/js/pages/dashboard.js"></script>*@
+
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
+<script src="~/Scripts/dataTables_checkboxes.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
