@@ -1,0 +1,178 @@
+﻿@model StudentRegistrationWeb.ViewModel.StudentViewModel
+@{
+    ViewBag.Title = "Student Registration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            @*<div class="card-header">
+                    <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                </div>*@
+            <!-- /.card-header -->
+            <div class="card-body">
+                <form action="" method="post" class="form-horizontal" , role="form" id="transferOwnForm">
+                    @Html.AntiForgeryToken()
+                    @if (!ViewContext.ViewData.ModelState.IsValid)
+                    {
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    }
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.StudentNo)<br />
+                                @Html.TextBoxFor(model => model.StudentNo, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.StudentNo)
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name) <br />
+                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.NRC)<br />
+                                @Html.TextBoxFor(model => model.NRC, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.NRC)
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Address) <br />
+                                @Html.TextBoxFor(model => model.Address, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
+                                @Html.ValidationMessageFor(model => model.Address)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Phone)<br />
+                                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Phone)
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Email) <br />
+                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @id = "txtdesp1",@spellcheck = "false", @maxlength = 50 })
+                                @Html.ValidationMessageFor(model => model.Email)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FatherName)<br />
+                                @Html.TextBoxFor(model => model.FatherName, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.FatherName)
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.University)<br />
+                                <select id="FromAcc" class="form-control js-example-basic-single">
+                                    <option value="">Select</option>
+                                    @foreach (var uni in ViewBag.UniversityList)
+                                    {
+                                        <option value="@uni.Name" data-description="@uni.Name">
+                                            @uni.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Major)<br />
+                                <select id="FromAcc" class="form-control js-example-basic-single">
+                                    <option value="">Select</option>
+                                    @foreach (var uni in ViewBag.UniversityList)
+                                    {
+                                        <option value="@uni.Name" data-description="@uni.Name">
+                                            @uni.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AcademicYear)<br />
+                                <select id="FromAcc" class="form-control js-example-basic-single">
+                                    <option value="">Select</option>
+                                    @foreach (var uni in ViewBag.UniversityList)
+                                    {
+                                        <option value="@uni.Name" data-description="@uni.Name">
+                                            @uni.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Gender)<br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                    <label class="form-check-label" for="inlineRadio1">Male</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                    <label class="form-check-label" for="inlineRadio2">Female</label>
+                                </div>
+                                @*@Html.TextBoxFor(model => model.Gender, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Gender)*@
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DateOfBirth)
+                                @Html.TextBoxFor(model => model.DateOfBirth, new { @id = "todatepicker", @class = "form-control date-picker", @autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        @*<div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DateOfBirth) <br />
+                                @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
+                                @Html.ValidationMessageFor(model => model.DateOfBirth)
+                            </div>
+                        </div>*@
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <input type="button" class="btn btn-default" onclick="" value="Cancel" />
+                                <input type="submit" id="btnOwnTransfer" class="btn btn-purple" value="Next" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#todatepicker').datepicker({
+            changeMonth: false,
+            changeYear: false,
+            dateFormat: 'dd/mm/yy'
+        });
+    });
+
+</script>

@@ -9,23 +9,22 @@ namespace StudentRegistrationWeb.Controllers
 {
     public class StudentController : Controller
     {
-        string test = "";
         // GET: Student
         public ActionResult StudentList()
         {
             return View();
         }
-
-        [AllowAnonymous]
-        public ActionResult GetStudentListSearch()
+        public ActionResult StudentRegister()
         {
-            return View("StudentList");
-        }
-        [HttpPost]
-        [AllowAnonymous]
-        public ActionResult GetStudentListSearch(StudentModel student)
-        {
-            return View("StudentList");
+            TestModel t = new TestModel();
+            t.Name = "CU";
+            TestModel t1 = new TestModel();
+            t1.Name = "TU";
+            List<TestModel> l = new List<TestModel>();
+            l.Add(t);
+            l.Add(t1);
+            ViewBag.UniversityList = l;
+            return View();
         }
     }
 }
