@@ -14,6 +14,19 @@ namespace StudentRegistrationWeb.Controllers
         {
             return View();
         }
+
+        [AllowAnonymous]
+        public ActionResult GetStudentListSearch()
+        {
+            return View("StudentList");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult GetStudentListSearch(StudentModel student)
+        {
+            return View("StudentList");
+        }
         public ActionResult StudentRegister()
         {
             TestModel t = new TestModel();
@@ -26,5 +39,6 @@ namespace StudentRegistrationWeb.Controllers
             ViewBag.UniversityList = l;
             return View();
         }
+
     }
 }
