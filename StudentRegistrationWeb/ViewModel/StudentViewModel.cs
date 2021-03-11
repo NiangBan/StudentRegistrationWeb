@@ -45,5 +45,8 @@ namespace StudentRegistrationWeb.ViewModel
         [Required(ErrorMessage = "Please enter DateOfBirth.")]
         [Display(Name = "DateOfBirth", ResourceType = typeof(Resource))]
         public string DateOfBirth { get; set; }
+        public int UniversityID { get; set; }
+        public int MajorID { get; set; }
+        public int AcademicYearID { get; set; }
     }
 }

@@ -10,11 +10,12 @@ namespace StudentRegistrationWeb.Models
     {
         [Display(Name = "Student Name")]
         public string StudentName { get; set; }
-        [Display(Name = "Student Number")]
+        [Display(Name = "Student ID")]
         public string StudentNumber { get; set; }
         [Display(Name = "Father Name")]
         public string FatherName { get; set; }
         [Display(Name = "Phone")]
         public string Phone { get; set; }
+        public string idString { get; set; }
     }
 }

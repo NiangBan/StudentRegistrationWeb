@@ -59,7 +59,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Academic Year.
         /// </summary>
@@ -68,7 +68,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("AcademicYear", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Address.
         /// </summary>
@@ -77,7 +77,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("Address", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Date Of Birth.
         /// </summary>
@@ -86,7 +86,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("DateOfBirth", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
@@ -95,7 +95,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("Email", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Father Name.
         /// </summary>
@@ -104,7 +104,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("FatherName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Gender.
         /// </summary>
@@ -113,7 +113,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("Gender", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Major.
         /// </summary>
@@ -122,7 +122,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("Major", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
@@ -140,7 +140,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("NRC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Phone.
         /// </summary>
@@ -149,7 +149,16 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("Phone", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Student No..
         /// </summary>
@@ -158,7 +167,7 @@ namespace StudentRegistrationWeb.LocalResources {
                 return ResourceManager.GetString("StudentNo", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to University.
         /// </summary>
