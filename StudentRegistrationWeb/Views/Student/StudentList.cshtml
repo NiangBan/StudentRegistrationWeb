@@ -1,5 +1,6 @@
 ﻿@using StudentRegistrationWeb.Extension
 @using StudentRegistrationWeb.LocalResources
+@using StudentRegistrationWeb.Models
 @model StudentRegistrationWeb.Models.StudentModel
 @{
     ViewBag.Title = "Student List";
@@ -91,52 +92,32 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (int j = 1; j < 6; j++)
+
+                            @if (ViewBag.StudentList != null)
                             {
-                                <tr>
-                                    <td>1</td>
-                                    <td>CS1</td>
-                                    <td>Mya Mya</td>
-                                    <td>U Mya</td>
-                                    <td>12/TaTaNa(N)123455</td>
-                                    <td>0922445555</td>
-                                    <td>aye@gmail.com</td>
-                                    @*<td>01-02-2000</td>
-                            <td>Yangon</td>
-                            <td>Computer University</td>
-                            <td>CS</td>
-                            <td>1st year</td>*@
+                                foreach (var item in (List<StudentDTO>)ViewBag.StudentList)
+                                {
+                                    <tr>
+                                        <td>@item.Id</td>
+                                        <td>@item.StudentNo</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.FatherName</td>
+                                        <td>@item.NRC</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.Email</td>
+                                        @*<td>01-02-2000</td>
+                                        <td>Yangon</td>
+                                        <td>Computer University</td>
+                                        <td>CS</td>
+                                        <td>1st year</td>*@
                                     <td style="width: 193px;">
-                                        <button type="button" id="btnApprove" class="btn btn-success" onclick="getUpdate(@j)" @*onclick="getUpdate(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
-                                        <button type="button" id="btnReject" class="btn btn-danger" onclick="getDelete(@j)" @*onclick="getDelete(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
-                                        <button type="button" id="btnDetails" class="btn btn-default" onclick="getDetails(@j)" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
+                                        <button type="button" id="btnApprove" class="btn btn-success" onclick="getUpdate(@item.Id)">@*@Resource.*@Edit</button>
+                                        <button type="button" id="btnReject" class="btn btn-danger"  onclick="getDelete(@item.Id)">@*@Resource.*@Delete</button>
+                                        <button type="button" id="btnDetails" class="btn btn-default" onclick="getDetails(@item.Id)">@*@Resource.*@Detail</button>
                                     </td>
                                 </tr>
+                                }
                             }
-                            @for (int i = 6; i < 13; i++)
-                            {
-                                <tr>
-                                    <td>2</td>
-                                    <td>CS1</td>
-                                    <td>Aye Aye</td>
-                                    <td>U Aye</td>
-                                    <td>12/TaTaNa(N)123455</td>
-                                    <td>0922445555</td>
-                                    <td>aye@gmail.com</td>
-                                    @*<td>01-02-2000</td>
-                            <td>Yangon</td>
-                            <td>Computer University</td>
-                            <td>CS</td>
-                            <td>1st year</td>*@
-                                    <td style="width: 193px;">
-                                        <button type="button" id="btnApprove" class="btn btn-success" onclick="getUpdate(@i)" @*onclick="getUpdate(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Edit</button>
-                                        <button type="button" id="btnReject" class="btn btn-danger" onclick="getDelete(@i)" @*onclick="getDelete(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Delete</button>
-                                        <button type="button" id="btnDetails" class="btn btn-default" onclick="getDetails(@i)" @*onclick="getDetails(@items.c_Req_Changes.Id)"*@>@*@Resource.*@Detail</button>
-                                    </td>
-                                </tr>
-                            }
-
-
                         </tbody>
                     </table>
                 </div>

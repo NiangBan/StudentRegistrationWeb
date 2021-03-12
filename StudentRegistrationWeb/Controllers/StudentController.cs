@@ -1,4 +1,8 @@
-﻿using StudentRegistrationWeb.Models;
+﻿using Newtonsoft.Json;
+using StudentRegistrationWeb.Extension;
+using StudentRegistrationWeb.Helper;
+using StudentRegistrationWeb.Models;
+using StudentRegistrationWeb.Utils;
 using StudentRegistrationWeb.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -8,12 +12,57 @@ using System.Web.Mvc;
 
 namespace StudentRegistrationWeb.Controllers
 {
-    public class StudentController : Controller
+    public class StudentController : BaseController
     {
         // GET: Student
         public ActionResult StudentList()
         {
-            return View();
+            AccountCreateResponseModel res = new AccountCreateResponseModel();
+            AccountCreateRequestModel req = new AccountCreateRequestModel();
+            var response = new StudentListModel();            
+            List<StudentModel> lstStudent = new List<StudentModel>();
+            StudentModel studentModel = new StudentModel();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var dynamicKey = CommonUtils.HardCodeKeyForAES();
+                    string hardCodeKey = CommonUtils.HardCodeKeyForAES();
+                    string hardCodeIV = CommonUtils.HardCodeIVForAES();
+                    string jsonString = EncryptUserRegisterRequestObject(req);
+                    var SessionIdStr = "ab123445333";
+                    var UserIdStr = "83658c0f-62f8-4599-9982-9cdaf6b64985";
+                    var SessionId= CryptoUtils.EncryptAES(SessionIdStr, hardCodeKey, hardCodeIV);
+                    var UserId= CryptoUtils.EncryptAES(UserIdStr, hardCodeKey, hardCodeIV);
+                    var apiRequestModel = this.APIRequest(jsonString, SessionId, UserId, true);
+
+                    var dataReturn = this.PostAPI(apiRequestModel, APIRoute.API_Student_List).Result;
+
+                    var ticketKey = CommonUtils.AESKeyForTicket();
+                    var ticketIV = CommonUtils.AESIVForTicket();
+                    if (dataReturn.RespCode == "000")
+                    {
+                        var decryptData = RijndaelCrypt.DecryptAES(dataReturn.JsonStringResponse, hardCodeKey, hardCodeIV);
+
+                        response = JsonConvert.DeserializeObject<StudentListModel>(decryptData);
+                        ViewBag.StudentList = response.studentList;
+                    }
+                    //res = this.DecryptUserRegisterResponseObject(dataReturn.JsonStringResponse);
+                    
+                }
+                return View();
+            }
+            catch (Exception ex)
+            {
+                /*errormsg = ex.Message;
+                TempData["Message"] = errormsg;
+                Log.Error($"Exception => {ex.Message} ");*/
+                return View();
+            }
+
+            finally
+            {
+            }
         }
 
         [AllowAnonymous]

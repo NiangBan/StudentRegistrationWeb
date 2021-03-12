@@ -101,21 +101,28 @@ namespace StudentRegistrationWeb.Controllers
         public ApiRequestModel APIRequest(string jsonString, object SessionID, object UserID,bool status)
         {
             ApiRequestModel model = new ApiRequestModel();
+            var sessionIDStr = SessionID.ToString();
+            var userIDStr = UserID.ToString();
+            string hardCodeKey = CommonUtils.HardCodeKeyForAES();
+            string hardCodeIV = CommonUtils.HardCodeIVForAES();
+            
             model.JsonStringRequest = jsonString;
-            model.SessionID = status? SessionID.ToString(): string.Empty;
-            model.UserId = status ? UserID.ToString(): string.Empty;
+            model.SessionID = status? RijndaelCrypt.DecryptAES(sessionIDStr, hardCodeKey, hardCodeIV) : string.Empty;
+            model.UserId = status ? RijndaelCrypt.DecryptAES(userIDStr, hardCodeKey, hardCodeIV) : string.Empty;
             return model;
         }
 
         protected async Task<ApiResponseModel> PostAPI(ApiRequestModel requestModel, string path)
         {
+            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             var resModel = new ApiResponseModel();
 
             try
             {
                 var hardCodeKey = CommonUtils.HardCodeKeyForAES();
                 var hardCodeIV = CommonUtils.HardCodeIVForAES();
-                requestModel.UserId = RijndaelCrypt.EncryptAES(requestModel.UserId, hardCodeKey, hardCodeIV);
+                //requestModel.UserId = RijndaelCrypt.EncryptAES(requestModel.UserId, hardCodeKey, hardCodeIV);
+                requestModel.SessionID = RijndaelCrypt.EncryptAES(requestModel.SessionID, hardCodeKey, hardCodeIV);
                 // path = "API/IB/IB_Profile";
                 using (var client = new HttpClient())
                 {
@@ -138,6 +145,7 @@ namespace StudentRegistrationWeb.Controllers
                         if (responseModel.RespCode == "000")
                         {
                             //Log.Info(path + " API call successful.");
+                            
                             return responseModel;
                         }
 
