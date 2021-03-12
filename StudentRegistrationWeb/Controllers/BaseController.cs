@@ -109,6 +109,7 @@ namespace StudentRegistrationWeb.Controllers
 
         protected async Task<ApiResponseModel> PostAPI(ApiRequestModel requestModel, string path)
         {
+            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             var resModel = new ApiResponseModel();
 
             try
