@@ -7,5 +7,7 @@ namespace StudentRegistrationWeb.Models
 {
     public class AccountCreateResponseModel
     {
+        public string RespCode { get; set; }
+        public string RespDescription { get; set; }
     }
 }

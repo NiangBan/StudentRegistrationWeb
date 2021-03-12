@@ -47,7 +47,7 @@ namespace StudentRegistrationWeb.Controllers
 
                     var ticketKey = CommonUtils.AESKeyForTicket();
                     var ticketIV = CommonUtils.AESIVForTicket();
-
+                    res = this.DecryptUserRegisterResponseObject(dataReturn.JsonStringResponse);
                     /*var respomseStr = CryptoUtils.DecryptAES(dataReturn.JsonStringResponse, dynamicKey, dynamicIv);
                     if (string.IsNullOrEmpty(respomseStr))
                     {

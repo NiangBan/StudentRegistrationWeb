@@ -88,6 +88,10 @@ namespace StudentRegistrationWeb.Controllers
         {
             return this.Crypto.Encrypt(JsonConvert.SerializeObject(requestModel), CryptoUtils.EncryptionKey, CryptoUtils.EncryptionIV);
         }
+        protected AccountCreateResponseModel DecryptUserRegisterResponseObject(string encryptString)
+        {
+            return JsonConvert.DeserializeObject<AccountCreateResponseModel>(this.Crypto.Decrypt(encryptString, CryptoUtils.EncryptionKey, CryptoUtils.EncryptionIV));
+        }
 
         protected string EncryptOtherRequestObject(object obj, string dynamicKey, string dynamicIV)
         {
