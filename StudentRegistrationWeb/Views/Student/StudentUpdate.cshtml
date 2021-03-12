@@ -16,7 +16,7 @@
                 </div>*@
             <!-- /.card-header -->
             <div class="card-body">
-                <form action="@HtmlExtension.GetEncryptLink("StudentUpdate", "Beneficiary")" method="post" class="form-horizontal" , role="form" id="studentUpdate">
+                <form action="@HtmlExtension.GetEncryptLink("StudentUpdate", "Student")" method="post" class="form-horizontal" , role="form" id="studentUpdate">
                     @Html.AntiForgeryToken()
                     @if (!ViewContext.ViewData.ModelState.IsValid)
                     {
@@ -157,18 +157,13 @@
     </div>
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#todatepicker').datepicker({
-            changeMonth: false,
-            changeYear: false,
-            dateFormat: 'dd/mm/yy'
-        });
-    });
+<input type="hidden" value="@HtmlExtension.GetEncryptLink("SelectMajorByUniversityId", "Student" )" id="SelectMajorByUniversityId">
+<input type="hidden" value="@HtmlExtension.GetEncryptLink("SelectAcademicByMajorId", "Student" )" id="SelectAcademicByMajorId">
 
-</script>
 
 <script>
+    const SelectMajorByUniversityId = $('#SelectMajorByUniversityId').val();
+    const SelectAcademicByMajorId = $('#SelectAcademicByMajorId').val();
     $(document).ready(function () {
         //$('.js-example-basic-single').select2({
         //    width: '100%'
@@ -184,7 +179,7 @@
             $("#university").val($("#UniversityList option:selected").text());
             if (reqUniversity != null) {
                 $.ajax({
-                    url: 'SelectMajorByUniversityId',
+                    url: SelectMajorByUniversityId,
                     type: "POST",
                     dataType: "JSON",
                     data: { universityid: reqUniversity },
@@ -212,7 +207,7 @@
             $("#major").val($("#MajorList option:selected").text());
             if (reqMajor != null) {
                 $.ajax({
-                    url: 'SelectAcademicByMajorId',
+                    url: SelectAcademicByMajorId,
                     type: "POST",
                     dataType: "JSON",
                     data: { majorid: reqMajor },
@@ -282,6 +277,28 @@
             $('#DESCRIPTION').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
         }
     });
+    function ShowMessage(text, type) {
+        $('#msgS').hide();
+        $('#msgW').hide();
+        $('#msgE').hide();
+        if (type === "MI") {
+            $('#msgS_msg').html(text);
+            $('#msgS').show();
+            $('#msgW').hide();
+            $('#msgE').hide();
+        } else if (type === "MW") {
+            $('#msgW_msg').html(text);
+            $('#msgW').show();
+            $('#msgS').hide();
+            $('#msgE').hide();
+
+        } else if (type === "ME") {
+            $('#msgE_msg').html(text);
+            $('#msgE').show();
+            $('#msgS').hide();
+            $('#msgW').hide();
+        }
+    }
 
 </script>
 

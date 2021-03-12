@@ -1,73 +1,106 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 
-namespace StudentRegistrationWeb.Extension
+namespace StudentRegistrationWeb.Helper
 {
-    public class CryptoUtils
+    public class RijndaelCrypt
     {
-        public static string EncryptionKey = "560A18CD-6346-4CF0-A2E8-671F9B6B9EA9";
-        public static string EncryptionIV = "CTfKxBSt6tkBv3E5";
-        public static string TicketKey = "560A10CD-6346-4CF0-A2E8-671F9B6B9EA0";
-        public static string TicketIV = "yiUl6VJyegpXqtz3";
+        #region Private/Protected Member Variables
 
-        public static string HardCodeKeyForAES()
-        {
-            return EncryptionKey;
-        }
+        /// <summary>
+        /// Decryptor
+        /// 
+        private readonly ICryptoTransform _decryptor;
 
-        public static string HardCodeIVForAES()
-        {
-            return EncryptionIV;
-        }
-        public string Encrypt(string plainText)
-        {
-            return Base64Encode(plainText);
-        }
+        /// <summary>
+        /// Encryptor
+        /// 
+        private readonly ICryptoTransform _encryptor;
 
-        public string Encrypt(string text, string key, string iv)
+        /// <summary>
+        /// 16-byte Private Key
+        /// 
+        private static readonly byte[] IV = Encoding.UTF8.GetBytes("ThisIsUrPassword");
+        private readonly byte[] _IV;
+
+        /// <summary>
+        /// Public Key
+        /// 
+        private readonly byte[] _password;
+
+        /// <summary>
+        /// Rijndael cipher algorithm
+        /// 
+        private readonly RijndaelManaged _cipher;
+
+        #endregion
+
+        #region Private/Protected Properties
+
+        private ICryptoTransform Decryptor { get { return _decryptor; } }
+        private ICryptoTransform Encryptor { get { return _encryptor; } }
+
+        #endregion
+
+        #region Private/Protected Methods
+        #endregion
+
+        #region Constructor
+        /// <summary>
+        /// Constructor
+        /// 
+        /// <param name="password">Public key
+        public RijndaelCrypt(string password)
         {
+            //Encode digest
             var md5 = new MD5CryptoServiceProvider();
-            var password = md5.ComputeHash(Encoding.ASCII.GetBytes(key));
-            var IVBytes = Encoding.UTF8.GetBytes(iv);
+            _password = md5.ComputeHash(Encoding.ASCII.GetBytes(password));
 
             //Initialize objects
-            var cipher = new RijndaelManaged();
-            var encryptor = cipher.CreateEncryptor(password, IVBytes);
+            _cipher = new RijndaelManaged();
+            _decryptor = _cipher.CreateDecryptor(_password, IV);
+            _encryptor = _cipher.CreateEncryptor(_password, IV);
 
-            try
-            {
-                //var buffer = Encoding.ASCII.GetBytes(text);
-                var buffer = Encoding.UTF8.GetBytes(text);
-                return Convert.ToBase64String(encryptor.TransformFinalBlock(buffer, 0, buffer.Length));
-            }
-            catch (ArgumentException ae)
-            {
-                Console.WriteLine("inputCount uses an invalid value or inputBuffer has an invalid offset length. " + ae);
-                return null;
-            }
-            catch (ObjectDisposedException oe)
-            {
-                Console.WriteLine("The object has already been disposed." + oe);
-                return null;
-            }
         }
-        public string Decrypt(string text, string key, string iv)
+
+        /// <summary>
+        /// Constructor
+        /// 
+        /// <param name="password">Public key
+        public RijndaelCrypt(string password, string IV)
         {
+
+            _IV = Encoding.ASCII.GetBytes(IV);
+            //Encode digest
             var md5 = new MD5CryptoServiceProvider();
-            var password = md5.ComputeHash(Encoding.ASCII.GetBytes(key));
-            var IVBytes = Encoding.UTF8.GetBytes(iv);
+            _password = md5.ComputeHash(Encoding.ASCII.GetBytes(password));
 
             //Initialize objects
-            var cipher = new RijndaelManaged();
-            var decryptor = cipher.CreateDecryptor(password, IVBytes);
+            _cipher = new RijndaelManaged();
+            _decryptor = _cipher.CreateDecryptor(_password, _IV);
+            _encryptor = _cipher.CreateEncryptor(_password, _IV);
 
+        }
+
+        #endregion
+
+        #region Public Properties
+        #endregion
+
+        #region Public Methods
+
+        public string Decrypt(string text)
+        {
             try
             {
                 byte[] input = Convert.FromBase64String(text);
 
-                var newClearData = decryptor.TransformFinalBlock(input, 0, input.Length);
-                //return Encoding.ASCII.GetString(newClearData);
+                var newClearData = Decryptor.TransformFinalBlock(input, 0, input.Length);
+                // return Encoding.ASCII.GetString(newClearData);
                 return Encoding.UTF8.GetString(newClearData);
             }
             catch (ArgumentException ae)
@@ -80,27 +113,30 @@ namespace StudentRegistrationWeb.Extension
                 Console.WriteLine("The object has already been disposed." + oe);
                 return null;
             }
-            catch (Exception)
+
+
+        }
+
+        public string Encrypt(string text)
+        {
+            try
             {
+                var buffer = Encoding.UTF8.GetBytes(text);
+                return Convert.ToBase64String(Encryptor.TransformFinalBlock(buffer, 0, buffer.Length));
+            }
+            catch (ArgumentException ae)
+            {
+                Console.WriteLine("inputCount uses an invalid value or inputBuffer has an invalid offset length. " + ae);
                 return null;
             }
-        }
-        public string GetUniqueKey(int size)
-        {
-            char[] chars =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
-            byte[] data = new byte[size];
-            using (RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider())
+            catch (ObjectDisposedException oe)
             {
-                crypto.GetBytes(data);
+                Console.WriteLine("The object has already been disposed." + oe);
+                return null;
             }
-            StringBuilder result = new StringBuilder(size);
-            foreach (byte b in data)
-            {
-                result.Append(chars[b % (chars.Length)]);
-            }
-            return result.ToString();
+
         }
+
 
         public static string EncryptAES(string text, string inputKey, string IV)
         {
@@ -164,26 +200,23 @@ namespace StudentRegistrationWeb.Extension
             }
         }
 
-        public string EncryptForExtension(string plainText)
+        public static string GetUniqueKey(int size)
         {
-            return Base64Encode(plainText);
-            
-        }
-        public string DecryptForExtension(string encryptedText)
-        {
-            
-            return Base64Decode(encryptedText);
-        }
-        public string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
+            char[] chars =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
+            byte[] data = new byte[size];
+            using (RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider())
+            {
+                crypto.GetBytes(data);
+            }
+            StringBuilder result = new StringBuilder(size);
+            foreach (byte b in data)
+            {
+                result.Append(chars[b % (chars.Length)]);
+            }
+            return result.ToString();
         }
 
-        public string Base64Decode(string base64EncodedData)
-        {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
-        }
+        #endregion
     }
 }

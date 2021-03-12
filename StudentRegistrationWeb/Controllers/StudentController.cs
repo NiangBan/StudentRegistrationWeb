@@ -137,14 +137,15 @@ namespace StudentRegistrationWeb.Controllers
             if (academicYearList.lstAcademicYear.Count > 0)
             {
                 var academicInfo = new SelectList(academicYearList.lstAcademicYear.Where(x => x.Name != studentViewModel.AcademicYear),
-                    "ID",
+                    "AcademicYearID",
                     "Name").ToList();
                 academicInfo.Insert(0, new SelectListItem { Value = studentViewModel.AcademicYearID.ToString(), Text = studentViewModel.AcademicYear });
                 ViewBag.AcademicList = academicInfo;
             }
             return View("StudentUpdate", studentViewModel);
         }
-        public ActionResult StudentUpdate()
+        [HttpPost]
+        public ActionResult StudentUpdate(StudentViewModel model)
         {
             return View();
         }

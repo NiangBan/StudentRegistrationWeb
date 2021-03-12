@@ -5,7 +5,7 @@ using System.Text;
 namespace StudentRegistrationWeb.Extension
 {
     public class CommonUtils
-    {       
+    {
         public static string UserType = "Corporate";
         public static string ClientVersion = "1.0";
         public static string FirebaseToken = "123";
@@ -38,7 +38,7 @@ namespace StudentRegistrationWeb.Extension
         {
 
             string saltedcode = EncodedbySalted(System.Web.HttpContext.Current.Session["UserNameForSalted"].ToString());//salted user name
-            string hashString;           
+            string hashString;
             using (var sha256 = SHA256Managed.Create())
             {
                 var hash = sha256.ComputeHash(Encoding.Default.GetBytes(stringIn + saltedcode));
@@ -67,28 +67,14 @@ namespace StudentRegistrationWeb.Extension
             return "yiUl6VJyegpXqtz3";
         }
 
-        public static string HardCodeKeyForAES(string type)
+        public static string HardCodeKeyForAES()
         {
-            if (type == "MB")
-            {
-                return "560A18CD-6346-4CF0-A2E8-671F9B6B9EA9";
-            }
-            else
-            {
-                return "560A18CD-6346-4CF0-A2E8-671F9B6B9EA9";
-            }
+            return "560A18CD-6346-4CF0-A2E8-671F9B6B9EA9";
         }
 
-        public static string HardCodeIVForAES(string type)
+        public static string HardCodeIVForAES()
         {
-            if (type == "MB")
-            {
-                return "CTfKxBSt6tkBv3E5";
-            }
-            else
-            {
-                return "CTfKxBSt6tkBv3E5";
-            }
+            return "CTfKxBSt6tkBv3E5";
         }
 
         //convert from decimal format to (string)       
