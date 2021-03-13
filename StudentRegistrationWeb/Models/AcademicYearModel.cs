@@ -7,12 +7,13 @@ namespace StudentRegistrationWeb.Models
 {
     public class AcademicYearModel
     {
-        public string AcademicYearID { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
+        public string MajorId { get; set; }
     }
     public class AcademicYearListModel
     {
-        public List<AcademicYearModel> lstAcademicYear { get; set; }
+        public List<AcademicYearModel> YearList { get; set; }
         public string RespCode { get; set; }
         public string RespDescription { get; set; }
     }

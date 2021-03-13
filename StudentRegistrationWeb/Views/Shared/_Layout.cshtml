@@ -1,4 +1,4 @@
-﻿
+﻿@using StudentRegistrationWeb.Extension
 @Scripts.Render("~/bundles/jquery")
 <!DOCTYPE html>
 <html lang="en">
@@ -57,15 +57,15 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="@HtmlExtension.GetEncryptLink("StudentRegister", "Student")" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
-                                <p>
+                                <p> 
                                     Student Registration
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="@HtmlExtension.GetEncryptLink("StudentList", "Student")" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
                                 <p>
                                     Student List
@@ -73,7 +73,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="@HtmlExtension.GetEncryptLink("Login", "Login")" class="nav-link">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p>
                                     Logout

@@ -1,9 +1,13 @@
-﻿@model StudentRegistrationWeb.ViewModel.StudentViewModel
+﻿@using StudentRegistrationWeb.Extension
+@model StudentRegistrationWeb.ViewModel.StudentViewModel
 @{
     ViewBag.Title = "Student Registration";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@Scripts.Render("~/bundles/jquery")
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -12,7 +16,7 @@
                 </div>*@
             <!-- /.card-header -->
             <div class="card-body">
-                <form action="" method="post" class="form-horizontal" , role="form" id="transferOwnForm">
+                <form action="@HtmlExtension.GetEncryptLink("StudentRegister", "Student")" method="post" class="form-horizontal" , role="form" id="studentUpdate">
                     @Html.AntiForgeryToken()
                     @if (!ViewContext.ViewData.ModelState.IsValid)
                     {
@@ -23,14 +27,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.StudentNo)<br />
                                 @Html.TextBoxFor(model => model.StudentNo, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
-                                @Html.ValidationMessageFor(model => model.StudentNo)
+                                @Html.ValidationMessageFor(model => model.StudentNo, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Name) <br />
                                 @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
-                                @Html.ValidationMessageFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -39,14 +43,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.NRC)<br />
                                 @Html.TextBoxFor(model => model.NRC, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
-                                @Html.ValidationMessageFor(model => model.NRC)
+                                @Html.ValidationMessageFor(model => model.NRC, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Address) <br />
                                 @Html.TextBoxFor(model => model.Address, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
-                                @Html.ValidationMessageFor(model => model.Address)
+                                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -55,14 +59,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Phone)<br />
                                 @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
-                                @Html.ValidationMessageFor(model => model.Phone)
+                                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Email) <br />
-                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @id = "txtdesp1",@spellcheck = "false", @maxlength = 50 })
-                                @Html.ValidationMessageFor(model => model.Email)
+                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -71,51 +75,30 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.FatherName)<br />
                                 @Html.TextBoxFor(model => model.FatherName, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
-                                @Html.ValidationMessageFor(model => model.FatherName)
+                                @Html.ValidationMessageFor(model => model.FatherName, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.University)<br />
-                                <select id="FromAcc" class="form-control js-example-basic-single">
-                                    <option value="">Select</option>
-                                    @foreach (var uni in ViewBag.UniversityList)
-                                    {
-                                        <option value="@uni.Name" data-description="@uni.Name">
-                                            @uni.Name
-                                        </option>
-                                    }
-                                </select>
+                                @Html.LabelFor(model => model.University)
+                                @Html.DropDownListFor(model => model.University, ViewBag.UniversityList as IEnumerable<SelectListItem>, new { @class = "form-control js-example-basic-single", @id = "UniversityList", @required = "required" })
+                                @Html.HiddenFor(model => model.University, new { @id = "university" })
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Major)<br />
-                                <select id="FromAcc" class="form-control js-example-basic-single">
-                                    <option value="">Select</option>
-                                    @foreach (var uni in ViewBag.UniversityList)
-                                    {
-                                        <option value="@uni.Name" data-description="@uni.Name">
-                                            @uni.Name
-                                        </option>
-                                    }
-                                </select>
+                                @Html.LabelFor(model => model.Major)
+                                @Html.DropDownListFor(model => model.Major, ViewBag.MajorList as IEnumerable<SelectListItem>, new { @class = "form-control js-example-basic-single", @id = "MajorList", @required = "required" })
+                                @Html.HiddenFor(model => model.Major, new { @id = "major" })
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.AcademicYear)<br />
-                                <select id="FromAcc" class="form-control js-example-basic-single">
-                                    <option value="">Select</option>
-                                    @foreach (var uni in ViewBag.UniversityList)
-                                    {
-                                        <option value="@uni.Name" data-description="@uni.Name">
-                                            @uni.Name
-                                        </option>
-                                    }
-                                </select>
+                                @Html.LabelFor(model => model.AcademicYear)
+                                @Html.DropDownListFor(model => model.AcademicYear, ViewBag.AcademicList as IEnumerable<SelectListItem>, new { @class = "form-control js-example-basic-single", @id = "AcademicList", @required = "required" })
+                                @Html.HiddenFor(model => model.AcademicYear, new { @id = "academic" })
                             </div>
                         </div>
                     </div>
@@ -132,7 +115,7 @@
                                     <label class="form-check-label" for="inlineRadio2">Female</label>
                                 </div>
                                 @*@Html.TextBoxFor(model => model.Gender, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
-                                @Html.ValidationMessageFor(model => model.Gender)*@
+                                    @Html.ValidationMessageFor(model => model.Gender)*@
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -143,18 +126,26 @@
                             </div>
                         </div>
                         @*<div class="col-md-4">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.DateOfBirth) <br />
-                                @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
-                                @Html.ValidationMessageFor(model => model.DateOfBirth)
-                            </div>
-                        </div>*@
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.DateOfBirth) <br />
+                                    @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
+                                    @Html.ValidationMessageFor(model => model.DateOfBirth)
+                                </div>
+                            </div>*@
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="pull-right">
-                                <input type="button" class="btn btn-default" onclick="" value="Cancel" />
-                                <input type="submit" id="btnOwnTransfer" class="btn btn-purple" value="Next" />
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-md-1" @*style="margin-right:40px"*@>
+                                    <div class="form-group">
+                                        <input type="button" class="btn btn-default" onclick="goBack()" value="Cancel" />
+                                    </div>
+                                </div>
+                                <div class="col-md-1" @*style="margin-right:40px"*@>
+                                    <div class="form-group">
+                                        <input type="submit" id="btnOwnTransfer" class="btn btn-primary" value="Register" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -165,14 +156,190 @@
         <!-- /.card -->
     </div>
 </div>
+<input type="hidden" value="@HtmlExtension.GetEncryptLink("SelectMajorByUniversityId", "Student" )" id="SelectMajorByUniversityId">
+<input type="hidden" value="@HtmlExtension.GetEncryptLink("SelectAcademicByMajorId", "Student" )" id="SelectAcademicByMajorId">
 
-<script type="text/javascript">
+<script>
+    const SelectMajorByUniversityId = $('#SelectMajorByUniversityId').val();
+    const SelectAcademicByMajorId = $('#SelectAcademicByMajorId').val();
     $(document).ready(function () {
+        //$('.js-example-basic-single').select2({
+        //    width: '100%'
+        //});
+
+        $("#AcademicList").change(function () {
+
+            $("#academic").val($(this).find("option:selected").text());
+
+        });
+        $("#UniversityList").change(function () {
+            var reqUniversity = $("#UniversityList option:selected").val();
+            $("#university").val($("#UniversityList option:selected").text());
+            if (reqUniversity != null) {
+                $.ajax({
+                    url: SelectMajorByUniversityId,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { universityid: reqUniversity },
+                    success: function (data) {
+                        var items = "";
+                        $("#MajorList").empty();
+                        $.each(data, function (index, item) {
+                            items += "<option value='" + item.Value + "'>" + item.Text + "</option>";
+                        });
+                        $("#MajorList").append(items);
+                        $("#major").val($("#MajorList").find("option:first").text());
+
+                        var reqMajor = $("#MajorList option:first").val();
+                        $("#major").val($("#MajorList option:first").text());
+                        if (reqMajor != null) {
+                            $.ajax({
+                                url: SelectAcademicByMajorId,
+                                type: "POST",
+                                dataType: "JSON",
+                                data: { majorid: reqMajor },
+                                success: function (data) {
+                                    var items = "";
+                                    $("#AcademicList").empty();
+                                    $.each(data, function (index, item) {
+                                        items += "<option value='" + item.Value + "'>" + item.Text + "</option>";
+                                    });
+                                    $("#AcademicList").append(items);
+                                    $("#academic").val($("#AcademicList").find("option:first").text());
+                                },
+                                error: function () {
+                                    ShowMessage();
+                                }
+                            });
+                        } else {
+                            ShowMessage();
+                        }
+                    },
+                    error: function () {
+                        ShowMessage();
+                    }
+                });
+            }
+            else {
+                ShowMessage();
+            }
+        });
+
+        $("#MajorList").change(function () {
+            var reqMajor = $("#MajorList option:selected").val();
+            $("#major").val($("#MajorList option:selected").text());
+            if (reqMajor != null) {
+                $.ajax({
+                    url: SelectAcademicByMajorId,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { majorid: reqMajor },
+                    success: function (data) {
+                        var items = "";
+                        $("#AcademicList").empty();
+                        $.each(data, function (index, item) {
+                            items += "<option value='" + item.Value + "'>" + item.Text + "</option>";
+                        });
+                        $("#AcademicList").append(items);
+                        $("#academic").val($("#AcademicList").find("option:first").text());
+                    },
+                    error: function () {
+                        ShowMessage();
+                    }
+                });
+            } else {
+                ShowMessage();
+            }
+
+        });
+
+
+        $("#university").val($("#UniversityList").find("option:selected").text());
+        $("#major").val($("#MajorList").find("option:first").text());
+        $("#academic").val($("#AcademicList").find("option:first").text());
+
+        if ($('#UniversityList').val() != null) {
+            $('#UniversityList').removeClass('input-validation-error');
+            $('#UniversityList').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
+        }
+        if ($('#MajorList').val() != null) {
+            $('#MajorList').removeClass('input-validation-error');
+            $('#MajorList').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
+        }
+        if ($('#AcademicList').val() != null) {
+            $('#AcademicList').removeClass('input-validation-error');
+            $('#AcademicList').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
+        }
+
+        if ($('#nrc').val() != null) {
+            $('#nrc').removeClass('input-validation-error');
+            $('#nrc').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
+        }
+        if ($('#account').val() != null) {
+            $('#account').removeClass('input-validation-error');
+            $('#account').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
+        }
+        if ($('#BeneficiaryName').val() != null) {
+            $('#BeneficiaryName').removeClass('input-validation-error');
+            $('#BeneficiaryName').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
+        }
+        if ($('#MobileNo').val() != null) {
+            $('#MobileNo').removeClass('input-validation-error');
+            $('#MobileNo').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
+        }
+        if ($('#email').val() != null) {
+            $('#email').removeClass('input-validation-error');
+            $('#email').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
+        }
+        if ($('#Address').val() != null) {
+            $('#Address').removeClass('input-validation-error');
+            $('#Address').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
+        }
+        if ($('#DESCRIPTION').val() != null) {
+            $('#DESCRIPTION').removeClass('input-validation-error');
+            $('#DESCRIPTION').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
+        }
+
         $('#todatepicker').datepicker({
             changeMonth: false,
             changeYear: false,
             dateFormat: 'dd/mm/yy'
         });
     });
+    function ShowMessage(text, type) {
+        $('#msgS').hide();
+        $('#msgW').hide();
+        $('#msgE').hide();
+        if (type === "MI") {
+            $('#msgS_msg').html(text);
+            $('#msgS').show();
+            $('#msgW').hide();
+            $('#msgE').hide();
+        } else if (type === "MW") {
+            $('#msgW_msg').html(text);
+            $('#msgW').show();
+            $('#msgS').hide();
+            $('#msgE').hide();
 
+        } else if (type === "ME") {
+            $('#msgE_msg').html(text);
+            $('#msgE').show();
+            $('#msgS').hide();
+            $('#msgW').hide();
+        }
+    }
+    function goBack() {
+        window.location.href =  '@HtmlExtension.GetEncryptLink("StudentList", "Student")';
+    }
 </script>
+@*<script type="text/javascript">
+        $(document).ready(function () {
+            $('#todatepicker').datepicker({
+                changeMonth: false,
+                changeYear: false,
+                dateFormat: 'dd/mm/yy'
+            });
+        });
+
+    </script>*@
+

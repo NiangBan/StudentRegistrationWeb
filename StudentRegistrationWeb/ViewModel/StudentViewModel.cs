@@ -48,5 +48,6 @@ namespace StudentRegistrationWeb.ViewModel
         public int UniversityID { get; set; }
         public int MajorID { get; set; }
         public int AcademicYearID { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -88,7 +88,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">                                
+                            <div class="form-group">
                                 @Html.LabelFor(model => model.Major)
                                 @Html.DropDownListFor(model => model.Major, ViewBag.MajorList as IEnumerable<SelectListItem>, new { @class = "form-control js-example-basic-single", @id = "MajorList", @required = "required" })
                                 @Html.HiddenFor(model => model.Major, new { @id = "major" })
@@ -97,7 +97,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.AcademicYear)
-                                @Html.DropDownListFor(model => model.AcademicYear, ViewBag.AcademicList as IEnumerable<SelectListItem>, new { @class = "form-control js-example-basic-single", @id = "AcademicList", @required = "required"})
+                                @Html.DropDownListFor(model => model.AcademicYear, ViewBag.AcademicList as IEnumerable<SelectListItem>, new { @class = "form-control js-example-basic-single", @id = "AcademicList", @required = "required" })
                                 @Html.HiddenFor(model => model.AcademicYear, new { @id = "academic" })
                             </div>
                         </div>
@@ -133,12 +133,13 @@
                                 </div>
                             </div>*@
                     </div>
+                    @Html.HiddenFor(model => model.Id)
                     <div class="row">
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-md-1" @*style="margin-right:40px"*@>
                                     <div class="form-group">
-                                        <input type="button" class="btn btn-default" onclick="" value="Cancel" />
+                                        <input type="button" class="btn btn-default" onclick="goBack()" value="Cancel" />
                                     </div>
                                 </div>
                                 <div class="col-md-1" @*style="margin-right:40px"*@>
@@ -174,7 +175,7 @@
             $("#academic").val($(this).find("option:selected").text());
 
         });
-        $("#UniversityList").change(function () {
+        $("#UniversityList").change(function () {            
             var reqUniversity = $("#UniversityList option:selected").val();
             $("#university").val($("#UniversityList option:selected").text());
             if (reqUniversity != null) {
@@ -191,15 +192,40 @@
                         });
                         $("#MajorList").append(items);
                         $("#major").val($("#MajorList").find("option:first").text());
+
+                        var reqMajor = $("#MajorList option:first").val();
+                        $("#major").val($("#MajorList option:first").text());
+                        if (reqMajor != null) {
+                            $.ajax({
+                                url: SelectAcademicByMajorId,
+                                type: "POST",
+                                dataType: "JSON",
+                                data: { majorid: reqMajor },
+                                success: function (data) {
+                                    var items = "";
+                                    $("#AcademicList").empty();
+                                    $.each(data, function (index, item) {
+                                        items += "<option value='" + item.Value + "'>" + item.Text + "</option>";
+                                    });
+                                    $("#AcademicList").append(items);
+                                    $("#academic").val($("#AcademicList").find("option:first").text());
+                                },
+                                error: function () {
+                                    ShowMessage();
+                                }
+                            });
+                        } else {
+                            ShowMessage();
+                        }
                     },
                     error: function () {
                         ShowMessage();
-                    }
+                    }                    
                 });
-            } else {
+            }
+            else {
                 ShowMessage();
             }
-
         });
 
         $("#MajorList").change(function () {
@@ -234,7 +260,7 @@
         $("#university").val($("#UniversityList").find("option:selected").text());
         $("#major").val($("#MajorList").find("option:first").text());
         $("#academic").val($("#AcademicList").find("option:first").text());
-        
+
         if ($('#UniversityList').val() != null) {
             $('#UniversityList').removeClass('input-validation-error');
             $('#UniversityList').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
@@ -276,6 +302,11 @@
             $('#DESCRIPTION').removeClass('input-validation-error');
             $('#DESCRIPTION').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
         }
+        $('#todatepicker').datepicker({
+            changeMonth: false,
+            changeYear: false,
+            dateFormat: 'dd/mm/yy'
+        });
     });
     function ShowMessage(text, type) {
         $('#msgS').hide();
@@ -299,6 +330,8 @@
             $('#msgW').hide();
         }
     }
-
+    function goBack() {
+        window.location.href =  '@HtmlExtension.GetEncryptLink("StudentList", "Student")';
+    }
 </script>
 

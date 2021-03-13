@@ -10,58 +10,50 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+
 namespace StudentRegistrationWeb.Controllers
 {
     public class StudentController : BaseController
     {
         // GET: Student
+        string sessionId = "ab123445333";
+        string userId = "83658c0f-62f8-4599-9982-9cdaf6b64985";        
         public ActionResult StudentList()
-        {
-            AccountCreateResponseModel res = new AccountCreateResponseModel();
-            AccountCreateRequestModel req = new AccountCreateRequestModel();
-            var response = new StudentListModel();            
-            List<StudentModel> lstStudent = new List<StudentModel>();
-            StudentModel studentModel = new StudentModel();
+        {            
             try
             {
-                if (ModelState.IsValid)
-                {
-                    var dynamicKey = CommonUtils.HardCodeKeyForAES();
-                    string hardCodeKey = CommonUtils.HardCodeKeyForAES();
-                    string hardCodeIV = CommonUtils.HardCodeIVForAES();
-                    string jsonString = EncryptUserRegisterRequestObject(req);
-                    var SessionIdStr = "ab123445333";
-                    var UserIdStr = "83658c0f-62f8-4599-9982-9cdaf6b64985";
-                    var SessionId= CryptoUtils.EncryptAES(SessionIdStr, hardCodeKey, hardCodeIV);
-                    var UserId= CryptoUtils.EncryptAES(UserIdStr, hardCodeKey, hardCodeIV);
-                    var apiRequestModel = this.APIRequest(jsonString, SessionId, UserId, true);
+                var response = new StudentListModel();
+                #region BindRequestData
 
-                    var dataReturn = this.PostAPI(apiRequestModel, APIRoute.API_Student_List).Result;
+                ApiRequestModel request = new ApiRequestModel();
+                                
+                var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(request));
+                request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-                    var ticketKey = CommonUtils.AESKeyForTicket();
-                    var ticketIV = CommonUtils.AESIVForTicket();
-                    if (dataReturn.RespCode == "000")
-                    {
-                        var decryptData = RijndaelCrypt.DecryptAES(dataReturn.JsonStringResponse, hardCodeKey, hardCodeIV);
+                //Need to delete
+                Session[CommonSessionID] = sessionId;
+                Session[CommonUserID] = userId;
+                //
 
-                        response = JsonConvert.DeserializeObject<StudentListModel>(decryptData);
-                        ViewBag.StudentList = response.studentList;
-                    }
-                    //res = this.DecryptUserRegisterResponseObject(dataReturn.JsonStringResponse);
-                    
+                request.SessionID = Session[CommonSessionID].ToString();
+                request.UserId = Session[CommonUserID].ToString();
+                #endregion
+
+                #region Post Api
+
+                var dataReturn = this.PostDataAPI(request, APIRoute.API_Student_List).Result;
+
+                #endregion
+                if (dataReturn.RespCode == "000")
+                {                    
+                    response = JsonConvert.DeserializeObject<StudentListModel>(dataReturn.JsonStringResponse);
+                    ViewBag.StudentList = response.studentList;
                 }
                 return View();
             }
             catch (Exception ex)
             {
-                /*errormsg = ex.Message;
-                TempData["Message"] = errormsg;
-                Log.Error($"Exception => {ex.Message} ");*/
                 return View();
-            }
-
-            finally
-            {
             }
         }
 
@@ -79,221 +71,472 @@ namespace StudentRegistrationWeb.Controllers
         }
         public ActionResult StudentRegister()
         {
-            TestModel t = new TestModel();
-            t.Name = "CU";
-            TestModel t1 = new TestModel();
-            t1.Name = "TU";
-            List<TestModel> l = new List<TestModel>();
-            l.Add(t);
-            l.Add(t1);
-            ViewBag.UniversityList = l;
-            return View();
-        }
-        public ActionResult StudentUpdateByStudentId(StudentModel model)
-        {
-            List<TestModel> UniversityList = new List<TestModel>();
-            List<TestModel> MajorList = new List<TestModel>();
-            List<TestModel> AcademicYearList = new List<TestModel>();
-            TestModel university = new TestModel();
-            TestModel major = new TestModel();
-            TestModel academicYear = new TestModel();
+            var UniversityList =new UniversityListModel();
 
-            StudentViewModel studentViewModel = new StudentViewModel();
-            studentViewModel.Name = "Ban Kim";
-            studentViewModel.University = "TU";
-            studentViewModel.UniversityID = 2;
-            studentViewModel.Major = "EC";
-            studentViewModel.MajorID = 4;
-            studentViewModel.AcademicYear = "3rd Year";
-            studentViewModel.AcademicYearID = 3;
+            UniversityList=SelectUniversity();
 
-            university.Name = "CU";
-            university.Id = 1;
-            UniversityList.Add(university);
-
-            university = new TestModel();
-            university.Name = "TU";
-            university.Id = 2;
-            UniversityList.Add(university);
-
-            //major.Name = "CS";
-            //major.Id = 1;
-            //MajorList.Add(major);
-
-            //major = new TestModel();
-            //major.Name = "CT";
-            //major.Id = 2;
-            //MajorList.Add(major);
-
-            //major = new TestModel();
-            //major.Name = "Civil";
-            //major.Id = 3;
-            //MajorList.Add(major);
-
-            //major = new TestModel();
-            //major.Name = "EC";
-            //major.Id = 4;
-            //MajorList.Add(major);
-
-            //major = new TestModel();
-            //major.Name = "EP";
-            //major.Id = 5;
-            //MajorList.Add(major);
-
-            //academicYear.Name = "1st Year";
-            //academicYear.Id = 1;
-            //AcademicYearList.Add(academicYear);
-
-            //academicYear = new TestModel();
-            //academicYear.Name = "2nd Year";
-            //academicYear.Id = 2;
-            //AcademicYearList.Add(academicYear);
-
-            //academicYear = new TestModel();
-            //academicYear.Name = "3rd Year";
-            //academicYear.Id = 3;
-            //AcademicYearList.Add(academicYear);
-
-            //academicYear = new TestModel();
-            //academicYear.Name = "4th Year";
-            //academicYear.Id = 4;
-            //AcademicYearList.Add(academicYear);
-
-            //academicYear = new TestModel();
-            //academicYear.Name = "Final Year";
-            //academicYear.Id = 5;
-            //AcademicYearList.Add(academicYear);
-
-            var uniInfo = new SelectList(UniversityList.Where(x => x.Name != studentViewModel.University),
-                    "ID",
+            var universityId = string.Empty;
+            var marjorId = string.Empty;
+            if (UniversityList.UniversityList.Count > 0)
+            {
+                var uniInfo = new SelectList(UniversityList.UniversityList,
+                    "Id",
                     "Name").ToList();
-            uniInfo.Insert(0, new SelectListItem { Value = studentViewModel.UniversityID.ToString(), Text = studentViewModel.University });
-            ViewBag.UniversityList = uniInfo;
+                ViewBag.UniversityList = uniInfo;
+                universityId = uniInfo[0].Value;
+            }
+            else
+            {
+                IEnumerable<SelectListItem> uniInfo = new List<SelectListItem>();
+                ViewBag.UniversityList = uniInfo;
+            }
 
             MajorListModel majorList = new MajorListModel();
-            majorList = SelectMajor(studentViewModel.UniversityID.ToString());
-            if (majorList.lstMajor.Count > 0)
+            majorList = SelectMajor(universityId.ToString());
+            if (majorList.MajorList.Count > 0)
             {
-                var majorInfo = new SelectList(majorList.lstMajor.Where(x => x.Name != studentViewModel.Major),
-                    "MajorID",
+                var majorInfo = new SelectList(majorList.MajorList,
+                    "Id",
                     "Name").ToList();
-                majorInfo.Insert(0, new SelectListItem { Value = studentViewModel.MajorID.ToString(), Text = studentViewModel.Major });
+                ViewBag.MajorList = majorInfo;
+                marjorId = majorInfo[0].Value;
+            }
+            else
+            {
+                IEnumerable<SelectListItem> majorInfo = new List<SelectListItem>();
                 ViewBag.MajorList = majorInfo;
             }
 
             AcademicYearListModel academicYearList = new AcademicYearListModel();
-            academicYearList = SelectAcademic(studentViewModel.MajorID.ToString());
-            if (academicYearList.lstAcademicYear.Count > 0)
+            academicYearList = SelectAcademic(marjorId);
+            if (academicYearList.YearList.Count > 0)
             {
-                var academicInfo = new SelectList(academicYearList.lstAcademicYear.Where(x => x.Name != studentViewModel.AcademicYear),
-                    "AcademicYearID",
+                var academicInfo = new SelectList(academicYearList.YearList,
+                    "Id",
                     "Name").ToList();
-                academicInfo.Insert(0, new SelectListItem { Value = studentViewModel.AcademicYearID.ToString(), Text = studentViewModel.AcademicYear });
                 ViewBag.AcademicList = academicInfo;
             }
-            return View("StudentUpdate", studentViewModel);
+            else
+            {
+                IEnumerable<SelectListItem> academicInfo = new List<SelectListItem>();
+                ViewBag.AcademicList = academicInfo;
+            }
+            return View();
+        }
+        [HttpPost]
+        public ActionResult StudentRegister(StudentViewModel model)
+        {            
+            try
+            {
+                #region BindRequestData
+
+                ApiRequestModel request = new ApiRequestModel();
+
+                StudentDTO studentReq = new StudentDTO();
+                studentReq.Name = model.Name;
+                studentReq.FatherName = model.FatherName;
+                studentReq.StudentNo = model.StudentNo;
+                studentReq.NRC = model.NRC;
+                studentReq.Phone = model.Phone;
+                studentReq.Email = model.Email;
+                studentReq.Address = model.Address;
+                studentReq.Gender = model.Gender;
+                studentReq.DateOfBirth = model.DateOfBirth;
+                studentReq.UniversityId = model.University;
+                studentReq.MajorId = model.Major;
+                studentReq.AcademicyearId = model.AcademicYear;
+                studentReq.Gender = "Female";
+                studentReq.CreatedDate = DateTime.Now.ToString();
+                studentReq.UpdatedDate = DateTime.Now.ToString();
+                studentReq.CreatedUserId = "1";
+                studentReq.UpdatedUserId = "1";
+                var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentReq));
+                
+                request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
+                
+                //Need to delete
+                Session[CommonSessionID] = sessionId;
+                Session[CommonUserID] = userId;
+                //
+                request.SessionID = Session[CommonSessionID].ToString();
+                request.UserId = Session[CommonUserID].ToString();
+
+                #endregion
+
+                #region Post Api
+
+                var dataReturn = this.PostDataAPI(request, APIRoute.API_Student_Register).Result;
+
+                #endregion
+
+                if (dataReturn.RespCode == "000")
+                {
+                    StudentList();
+                    return View("StudentList");
+                }
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+        }
+        public ActionResult StudentUpdateByStudentId(StudentModel model)
+        {
+
+            var response = new StudentDTO();
+            StudentViewModel studentViewModel = new StudentViewModel();
+            var UniversityList = new UniversityListModel();
+            try
+            {
+                #region BindRequestData
+
+                ApiRequestModel request = new ApiRequestModel();
+                StudentDTO studentModel = new StudentDTO();
+                studentModel.Id = model.idString;
+                var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentModel));
+                request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
+
+                //Need to delete
+                Session[CommonSessionID] = sessionId;
+                Session[CommonUserID] = userId;
+                //
+
+                request.SessionID = Session[CommonSessionID].ToString();
+                request.UserId = Session[CommonUserID].ToString();
+                #endregion
+
+                #region Post Api
+
+                var dataReturn = this.PostDataAPI(request, APIRoute.API_Get_StudentById).Result;
+
+                #endregion
+                if (dataReturn.RespCode == "000")
+                {
+                    response = JsonConvert.DeserializeObject<StudentDTO>(dataReturn.JsonStringResponse);
+                    studentViewModel.Id =Int32.Parse(response.Id);
+                    studentViewModel.StudentNo = response.StudentNo;
+                    studentViewModel.Name = response.Name;
+                    studentViewModel.NRC = response.NRC;
+                    studentViewModel.Address = response.Address;
+                    studentViewModel.Phone = response.Phone;
+                    studentViewModel.Email = response.Email;
+                    studentViewModel.FatherName = response.FatherName;
+                    studentViewModel.DateOfBirth = response.DateOfBirth;
+                    studentViewModel.Gender = response.Gender;
+
+                    studentViewModel.University = response.UniversityName;
+                    studentViewModel.UniversityID = Int32.Parse(response.UniversityId);
+                    studentViewModel.Major = response.MajorName;
+                    studentViewModel.MajorID = Int32.Parse(response.MajorId);
+                    studentViewModel.AcademicYear = response.AcademicyearName;
+                    studentViewModel.AcademicYearID = Int32.Parse(response.AcademicyearId);
+
+                    UniversityList = SelectUniversity();
+
+                    if (UniversityList.UniversityList.Count > 0)
+                    {
+                        var uniInfo = new SelectList(UniversityList.UniversityList.Where(x => x.Name != studentViewModel.University),
+                            "Id",
+                            "Name").ToList();
+                        uniInfo.Insert(0, new SelectListItem { Value = studentViewModel.UniversityID.ToString(), Text = studentViewModel.University });
+                        ViewBag.UniversityList = uniInfo;
+                    }
+                    else
+                    {
+                        IEnumerable<SelectListItem> uniInfo = new List<SelectListItem>();
+                        ViewBag.UniversityList = uniInfo;
+                    }
+
+                    MajorListModel majorList = new MajorListModel();
+                    majorList = SelectMajor(studentViewModel.UniversityID.ToString());
+                    if (majorList.MajorList.Count > 0)
+                    {
+                        var majorInfo = new SelectList(majorList.MajorList.Where(x => x.Name != studentViewModel.Major),
+                            "Id",
+                            "Name").ToList();
+                        majorInfo.Insert(0, new SelectListItem { Value = studentViewModel.MajorID.ToString(), Text = studentViewModel.Major });
+                        ViewBag.MajorList = majorInfo;
+                    }
+                    else
+                    {
+                        IEnumerable<SelectListItem> majorInfo = new List<SelectListItem>();
+                        ViewBag.MajorList = majorInfo;
+                    }
+
+                    AcademicYearListModel academicYearList = new AcademicYearListModel();
+                    academicYearList = SelectAcademic(studentViewModel.MajorID.ToString());
+                    if (academicYearList.YearList.Count > 0)
+                    {
+                        var academicInfo = new SelectList(academicYearList.YearList.Where(x => x.Name != studentViewModel.AcademicYear),
+                            "Id",
+                            "Name").ToList();
+                        academicInfo.Insert(0, new SelectListItem { Value = studentViewModel.AcademicYearID.ToString(), Text = studentViewModel.AcademicYear });
+                        ViewBag.AcademicList = academicInfo;
+                    }
+                    else
+                    {
+                        IEnumerable<SelectListItem> academicInfo = new List<SelectListItem>();
+                        ViewBag.AcademicList = academicInfo;
+                    }
+                }
+                return View("StudentUpdate", studentViewModel);
+
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
         }
         [HttpPost]
         public ActionResult StudentUpdate(StudentViewModel model)
         {
-            return View();
+            try
+            {
+                #region BindRequestData
+
+                ApiRequestModel request = new ApiRequestModel();
+
+                StudentDTO studentReq = new StudentDTO();
+                studentReq.Id = model.Id.ToString();
+                studentReq.Name = model.Name;
+                studentReq.FatherName = model.FatherName;
+                studentReq.StudentNo = model.StudentNo;
+                studentReq.NRC = model.NRC;
+                studentReq.Phone = model.Phone;
+                studentReq.Email = model.Email;
+                studentReq.Address = model.Address;
+                studentReq.Gender = model.Gender;
+                studentReq.DateOfBirth = model.DateOfBirth;
+                studentReq.UniversityId = model.University;
+                studentReq.MajorId = model.Major;
+                studentReq.AcademicyearId = model.AcademicYear;
+                studentReq.Gender = "Female";
+                studentReq.CreatedDate = DateTime.Now.ToString();
+                studentReq.UpdatedDate = DateTime.Now.ToString();
+                studentReq.CreatedUserId = "1";
+                studentReq.UpdatedUserId = "1";
+                var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentReq));
+
+                request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
+                
+                //Need to delete
+                Session[CommonSessionID] = sessionId;
+                Session[CommonUserID] = userId;
+                //
+
+                request.SessionID = Session[CommonSessionID].ToString();
+                request.UserId = Session[CommonUserID].ToString();
+
+                #endregion
+
+                #region Post Api
+
+                var dataReturn = this.PostDataAPI(request, APIRoute.API_Student_Update).Result;
+
+                #endregion
+
+                if (dataReturn.RespCode == "000")
+                {
+                    StudentList();
+                    return View("StudentList");
+                }
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
         }
-        
+
+        [HttpPost]
+        public ActionResult StudentDeleteByStudentId(StudentModel model)
+        {
+            try
+            {
+                #region BindRequestData
+
+                ApiRequestModel request = new ApiRequestModel();
+
+                StudentDTO studentReq = new StudentDTO();
+                studentReq.Id = model.idString;
+                var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentReq));
+
+                request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
+
+                //Need to delete
+                Session[CommonSessionID] = sessionId;
+                Session[CommonUserID] = userId;
+                //
+
+                request.SessionID = Session[CommonSessionID].ToString();
+                request.UserId = Session[CommonUserID].ToString();
+
+                #endregion
+
+                #region Post Api
+
+                var dataReturn = this.PostDataAPI(request, APIRoute.API_Student_Delete).Result;
+
+                #endregion
+
+                if (dataReturn.RespCode == "000")
+                {
+                    StudentList();
+                    return View("StudentList");
+                }
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+        }
+
         public ActionResult StudentDetail(StudentModel model)
         {
-            List<TestModel> UniversityList = new List<TestModel>();
-            List<TestModel> MajorList = new List<TestModel>();
-            List<TestModel> AcademicYearList = new List<TestModel>();
-            TestModel university = new TestModel();
-            TestModel major = new TestModel();
-            TestModel academicYear = new TestModel();
-
+            var response = new StudentDTO();
             StudentViewModel studentViewModel = new StudentViewModel();
-            studentViewModel.Name = "Ban Kim";
-            studentViewModel.University = "CU";
-            studentViewModel.UniversityID = 1;
-            studentViewModel.Major = "CT";
-            studentViewModel.MajorID = 2;
-            studentViewModel.AcademicYear = "Final Year";
-            studentViewModel.AcademicYearID = 5;
+            var UniversityList = new UniversityListModel();
+            try
+            {
+                #region BindRequestData
 
-            university.Name = "CU";
-            university.Id = 1;
-            UniversityList.Add(university);
+                ApiRequestModel request = new ApiRequestModel();
+                StudentDTO studentModel = new StudentDTO();
+                studentModel.Id = model.idString;
+                var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentModel));
+                request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-            university = new TestModel();
-            university.Name = "TU";
-            university.Id = 2;
-            UniversityList.Add(university);
+                //Need to delete
+                Session[CommonSessionID] = sessionId;
+                Session[CommonUserID] = userId;
+                //
 
-            major.Name = "CS";
-            major.Id = 1;
-            MajorList.Add(major);
+                request.SessionID = Session[CommonSessionID].ToString();
+                request.UserId = Session[CommonUserID].ToString();
+                #endregion
 
-            major = new TestModel();
-            major.Name = "CT";
-            major.Id = 2;
-            MajorList.Add(major);
+                #region Post Api
 
-            major = new TestModel();
-            major.Name = "Civil";
-            major.Id = 3;
-            MajorList.Add(major);
+                var dataReturn = this.PostDataAPI(request, APIRoute.API_Get_StudentById).Result;
 
-            major = new TestModel();
-            major.Name = "EC";
-            major.Id = 4;
-            MajorList.Add(major);
+                #endregion
+                if (dataReturn.RespCode == "000")
+                {
+                    response = JsonConvert.DeserializeObject<StudentDTO>(dataReturn.JsonStringResponse);
 
-            major = new TestModel();
-            major.Name = "EP";
-            major.Id = 5;
-            MajorList.Add(major);
+                    studentViewModel.StudentNo = response.StudentNo;
+                    studentViewModel.Name = response.Name;
+                    studentViewModel.NRC = response.NRC;
+                    studentViewModel.Address = response.Address;
+                    studentViewModel.Phone = response.Phone;
+                    studentViewModel.Email = response.Email;
+                    studentViewModel.FatherName = response.FatherName;
+                    studentViewModel.DateOfBirth = response.DateOfBirth;
+                    studentViewModel.Gender = response.Gender;
 
-            academicYear.Name = "1st Year";
-            academicYear.Id = 1;
-            AcademicYearList.Add(academicYear);
+                    studentViewModel.University = response.UniversityName;
+                    studentViewModel.UniversityID = Int32.Parse(response.UniversityId);
+                    studentViewModel.Major = response.MajorName;
+                    studentViewModel.MajorID = Int32.Parse(response.MajorId);
+                    studentViewModel.AcademicYear = response.AcademicyearName;
+                    studentViewModel.AcademicYearID = Int32.Parse(response.AcademicyearId);
 
-            academicYear = new TestModel();
-            academicYear.Name = "2nd Year";
-            academicYear.Id = 2;
-            AcademicYearList.Add(academicYear);
+                    UniversityList = SelectUniversity();
 
-            academicYear = new TestModel();
-            academicYear.Name = "3rd Year";
-            academicYear.Id = 3;
-            AcademicYearList.Add(academicYear);
+                    if (UniversityList.UniversityList.Count > 0)
+                    {
+                        var uniInfo = new SelectList(UniversityList.UniversityList.Where(x => x.Name != studentViewModel.University),
+                            "Id",
+                            "Name").ToList();
+                        uniInfo.Insert(0, new SelectListItem { Value = studentViewModel.UniversityID.ToString(), Text = studentViewModel.University });
+                        ViewBag.UniversityList = uniInfo;
+                    }
+                    else
+                    {
+                        IEnumerable<SelectListItem> uniInfo = new List<SelectListItem>();
+                        ViewBag.UniversityList = uniInfo;
+                    }
 
-            academicYear = new TestModel();
-            academicYear.Name = "4th Year";
-            academicYear.Id = 4;
-            AcademicYearList.Add(academicYear);
+                    MajorListModel majorList = new MajorListModel();
+                    majorList = SelectMajor(studentViewModel.UniversityID.ToString());
+                    if (majorList.MajorList.Count > 0)
+                    {
+                        var majorInfo = new SelectList(majorList.MajorList.Where(x => x.Name != studentViewModel.Major),
+                            "Id",
+                            "Name").ToList();
+                        majorInfo.Insert(0, new SelectListItem { Value = studentViewModel.MajorID.ToString(), Text = studentViewModel.Major });
+                        ViewBag.MajorList = majorInfo;
+                    }
+                    else
+                    {
+                        IEnumerable<SelectListItem> majorInfo = new List<SelectListItem>();
+                        ViewBag.MajorList = majorInfo;
+                    }
 
-            academicYear = new TestModel();
-            academicYear.Name = "Final Year";
-            academicYear.Id = 5;
-            AcademicYearList.Add(academicYear);
+                    AcademicYearListModel academicYearList = new AcademicYearListModel();
+                    academicYearList = SelectAcademic(studentViewModel.MajorID.ToString());
+                    if (academicYearList.YearList.Count > 0)
+                    {
+                        var academicInfo = new SelectList(academicYearList.YearList.Where(x => x.Name != studentViewModel.AcademicYear),
+                            "Id",
+                            "Name").ToList();
+                        academicInfo.Insert(0, new SelectListItem { Value = studentViewModel.AcademicYearID.ToString(), Text = studentViewModel.AcademicYear });
+                        ViewBag.AcademicList = academicInfo;
+                    }
+                    else
+                    {
+                        IEnumerable<SelectListItem> academicInfo = new List<SelectListItem>();
+                        ViewBag.AcademicList = academicInfo;
+                    }                    
+                }
+                return View("StudentDetail", studentViewModel);
 
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+        }
 
-            var uniInfo = new SelectList(UniversityList.Where(x => x.Name != studentViewModel.University),
-                    "ID",
-                    "Name").ToList();
-            uniInfo.Insert(0, new SelectListItem { Value = studentViewModel.UniversityID.ToString(), Text = studentViewModel.University });
-            ViewBag.UniversityList = uniInfo;
+        [AllowAnonymous]
+        public UniversityListModel SelectUniversity()
+        {
+            var response = new UniversityListModel();
+            try
+            {                
+                #region BindRequestData
 
-            var majorInfo = new SelectList(MajorList.Where(x => x.Name != studentViewModel.Major),
-                    "ID",
-                    "Name").ToList();
-            majorInfo.Insert(0, new SelectListItem { Value = studentViewModel.MajorID.ToString(), Text = studentViewModel.Major });
-            ViewBag.MajorList = majorInfo;
+                ApiRequestModel request = new ApiRequestModel();
 
-            var academicInfo = new SelectList(AcademicYearList.Where(x => x.Name != studentViewModel.AcademicYear),
-                    "ID",
-                    "Name").ToList();
-            academicInfo.Insert(0, new SelectListItem { Value = studentViewModel.AcademicYearID.ToString(), Text = studentViewModel.AcademicYear });
-            ViewBag.AcademicList = academicInfo;
+                var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(request));
+                request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-            return View("StudentDetail", studentViewModel);
+                //Need to delete
+                Session[CommonSessionID] = sessionId;
+                Session[CommonUserID] = userId;
+                //
+
+                request.SessionID = Session[CommonSessionID].ToString();
+                request.UserId = Session[CommonUserID].ToString();
+                #endregion
+
+                #region Post Api
+
+                var dataReturn = this.PostDataAPI(request, APIRoute.API_Get_UniversityList).Result;
+
+                #endregion
+                if (dataReturn.RespCode == "000")
+                {
+                    response = JsonConvert.DeserializeObject<UniversityListModel>(dataReturn.JsonStringResponse);                    
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return response;
+            }
         }
 
         [AllowAnonymous]
@@ -301,11 +544,10 @@ namespace StudentRegistrationWeb.Controllers
         {
             IEnumerable<SelectListItem> infoList = new List<SelectListItem>();
             var response = SelectMajor(universityid);
-            if (response.lstMajor != null)
+            if (response.MajorList != null)
             {
-
-                infoList = new SelectList(response.lstMajor,
-                    "MajorID",
+                infoList = new SelectList(response.MajorList,
+                    "Id",
                     "Name").ToList();
                 return Json(new SelectList(infoList, "Value", "Text"));
             }
@@ -320,11 +562,10 @@ namespace StudentRegistrationWeb.Controllers
         {
             IEnumerable<SelectListItem> infoList = new List<SelectListItem>();
             var response = SelectAcademic(majorid);
-            if (response.lstAcademicYear != null)
+            if (response.YearList != null)
             {
-
-                infoList = new SelectList(response.lstAcademicYear,
-                    "AcademicYearID",
+                infoList = new SelectList(response.YearList,
+                    "Id",
                     "Name").ToList();
                 return Json(new SelectList(infoList, "Value", "Text"));
             }
@@ -335,248 +576,81 @@ namespace StudentRegistrationWeb.Controllers
         }
 
         public MajorListModel SelectMajor(string universityid)
-        {            
-            MajorListModel response = new MajorListModel();
-
-            MajorModel major = new MajorModel();
-            List<MajorModel> lstMajor = new List<MajorModel>();
-
-            if (universityid=="1")
+        {   
+            var response = new MajorListModel();
+            try
             {
-                major.Name = "CS";
-                major.MajorID = "1";
-                lstMajor.Add(major);
+                #region BindRequestData
 
-                major = new MajorModel();
-                major.Name = "CT";
-                major.MajorID = "2";
-                lstMajor.Add(major);
+                ApiRequestModel request = new ApiRequestModel();
+                MajorModel majorModel = new MajorModel();
+                majorModel.UniversityId = universityid;
+                var apirequest = JsonConvert.DeserializeObject<MajorModel>(JsonConvert.SerializeObject(majorModel));
+                request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
+
+                //Need to delete
+                Session[CommonSessionID] = sessionId;
+                Session[CommonUserID] = userId;
+                //
+
+                request.SessionID = Session[CommonSessionID].ToString();
+                request.UserId = Session[CommonUserID].ToString();
+                #endregion
+
+                #region Post Api
+
+                var dataReturn = this.PostDataAPI(request, APIRoute.API_Get_MajorList_UniId).Result;
+
+                #endregion
+                if (dataReturn.RespCode == "000")
+                {
+                    response = JsonConvert.DeserializeObject<MajorListModel>(dataReturn.JsonStringResponse);
+                }
+                return response;
             }
-            else
+            catch (Exception ex)
             {
-                major = new MajorModel();
-                major.Name = "Civil";
-                major.MajorID = "3";
-                lstMajor.Add(major);
-
-                major = new MajorModel();
-                major.Name = "EC";
-                major.MajorID = "4";
-                lstMajor.Add(major);
-
-                major = new MajorModel();
-                major.Name = "EP";
-                major.MajorID = "5";
-                lstMajor.Add(major);
+                return response;
             }
-
-            response.lstMajor = lstMajor;
-            response.RespCode = "0000";
-            response.RespDescription = "Sucess";
-            return response;
-            //#region BindRequestData
-
-            //string requestFilePath = APIRoute.API_SelectOtherBranch;
-            //string requestData = string.Empty;
-            //string errormsg = string.Empty;
-            //var apimodel = APIRequest(requestFilePath,
-            //    Session[CommonDynamicKey].ToString(),
-            //    Session[CommonSessionID].ToString(),
-            //    Session[CommonUserID].ToString());
-            //var apirequest = JsonConvert.DeserializeObject<OtherBranchSelectRequestModel>(JsonConvert.SerializeObject(apimodel));
-            //apirequest.OtherBankID = universityid;
-            //ABankRequestModel request = new ABankRequestModel();
-            //request.UserId = apimodel.UserID;
-            //request.SessionID = apimodel.SessionID;
-            //request.DeviceID = CommonUtils.DeviceID;
-            //request.UserType = CommonUtils.UserType;
-            //request.IV = apimodel.IV;
-            //try
-            //{
-            //    var bindreq = JsonConvert.SerializeObject(apirequest);
-            //    request.JsonStringRequest = bindreq;
-            //    requestData = JsonConvert.SerializeObject(request);
-            //    request.JsonStringRequest = RijndaelCrypt.EncryptAES(bindreq, apimodel.dynamicKey, apimodel.hardCodeIV);
-            //    #endregion
-
-            //    var dataReturn = this.PostMobileAPI(request, apimodel.requestFilePath).Result;
-
-            //    var bindData = RijndaelCrypt.DecryptAES(dataReturn.JsonStringResponse, apimodel.dynamicKey, apimodel.hardCodeIV);
-            //    response = JsonConvert.DeserializeObject<OtherBrnchListModel>(bindData);
-            //    return response;
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    errormsg = ex.Message;
-            //    return response;
-            //}
-            //finally
-            //{
-            //    if (!string.IsNullOrEmpty(errormsg))
-            //    {
-            //        Log.Error(requestFilePath + " Error: " + errormsg);
-            //        Log.Error("Request:" + requestData);
-            //        Log.Error("Response:" + JsonConvert.SerializeObject(response));
-            //    }
-            //    else
-            //    {
-            //        Log.Info(requestFilePath + " Successful");
-            //        Log.Info("Request:" + requestData);
-            //        Log.Info("Response:" + JsonConvert.SerializeObject(response));
-            //    }
-            //}
         }
 
         public AcademicYearListModel SelectAcademic(string majorid)
-        {
-            AcademicYearListModel response = new AcademicYearListModel();
-
-            AcademicYearModel academicYear = new AcademicYearModel();
-            List<AcademicYearModel> AcademicYearList = new List<AcademicYearModel>();
-
-            if (majorid == "1" || majorid == "2")
+        {            
+            var response = new AcademicYearListModel();
+            try
             {
-                academicYear.Name = "1st Year";
-                academicYear.AcademicYearID = "1";
-                AcademicYearList.Add(academicYear);
+                #region BindRequestData
 
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "2nd Year";
-                academicYear.AcademicYearID = "2";
-                AcademicYearList.Add(academicYear);
+                ApiRequestModel request = new ApiRequestModel();
+                AcademicYearModel academicYearModel = new AcademicYearModel();
+                academicYearModel.MajorId = majorid;
+                var apirequest = JsonConvert.DeserializeObject<AcademicYearModel>(JsonConvert.SerializeObject(academicYearModel));
+                request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "3rd Year";
-                academicYear.AcademicYearID = "3";
-                AcademicYearList.Add(academicYear);
+                //Need to delete
+                Session[CommonSessionID] = sessionId;
+                Session[CommonUserID] = userId;
+                //
 
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "4th Year";
-                academicYear.AcademicYearID = "4";
-                AcademicYearList.Add(academicYear);
+                request.SessionID = Session[CommonSessionID].ToString();
+                request.UserId = Session[CommonUserID].ToString();
+                #endregion
 
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "Final Year";
-                academicYear.AcademicYearID = "5";
-                AcademicYearList.Add(academicYear);
+                #region Post Api
+
+                var dataReturn = this.PostDataAPI(request, APIRoute.API_Get_AcademicList_MajorId).Result;
+
+                #endregion
+                if (dataReturn.RespCode == "000")
+                {
+                    response = JsonConvert.DeserializeObject<AcademicYearListModel>(dataReturn.JsonStringResponse);
+                }
+                return response;
             }
-            else if (majorid == "2")
+            catch (Exception ex)
             {
-                academicYear.Name = "1st Year";
-                academicYear.AcademicYearID = "6";
-                AcademicYearList.Add(academicYear);
-
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "2nd Year";
-                academicYear.AcademicYearID = "7";
-                AcademicYearList.Add(academicYear);
-
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "3rd Year";
-                academicYear.AcademicYearID = "8";
-                AcademicYearList.Add(academicYear);
-
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "4th Year";
-                academicYear.AcademicYearID = "9";
-                AcademicYearList.Add(academicYear);
-
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "Final Year";
-                academicYear.AcademicYearID = "10";
-                AcademicYearList.Add(academicYear);
+                return response;
             }
-            else
-            {
-                academicYear.Name = "1st Year";
-                academicYear.AcademicYearID = "11";
-                AcademicYearList.Add(academicYear);
-
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "2nd Year";
-                academicYear.AcademicYearID = "12";
-                AcademicYearList.Add(academicYear);
-
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "3rd Year";
-                academicYear.AcademicYearID = "13";
-                AcademicYearList.Add(academicYear);
-
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "4th Year";
-                academicYear.AcademicYearID = "14";
-                AcademicYearList.Add(academicYear);
-
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "5th Year";
-                academicYear.AcademicYearID = "15";
-                AcademicYearList.Add(academicYear);
-
-                academicYear = new AcademicYearModel();
-                academicYear.Name = "Final Year";
-                academicYear.AcademicYearID = "16";
-                AcademicYearList.Add(academicYear);
-            }
-
-            response.lstAcademicYear = AcademicYearList;
-            response.RespCode = "0000";
-            response.RespDescription = "Sucess";
-            return response;
-            //OtherBrnchListModel response = new OtherBrnchListModel();
-
-            //#region BindRequestData
-
-            //string requestFilePath = APIRoute.API_SelectOtherBranch;
-            //string requestData = string.Empty;
-            //string errormsg = string.Empty;
-            //var apimodel = APIRequest(requestFilePath,
-            //    Session[CommonDynamicKey].ToString(),
-            //    Session[CommonSessionID].ToString(),
-            //    Session[CommonUserID].ToString());
-            //var apirequest = JsonConvert.DeserializeObject<OtherBranchSelectRequestModel>(JsonConvert.SerializeObject(apimodel));
-            //apirequest.OtherBankID = majorid;
-            //ABankRequestModel request = new ABankRequestModel();
-            //request.UserId = apimodel.UserID;
-            //request.SessionID = apimodel.SessionID;
-            //request.DeviceID = CommonUtils.DeviceID;
-            //request.UserType = CommonUtils.UserType;
-            //request.IV = apimodel.IV;
-            //try
-            //{
-            //    var bindreq = JsonConvert.SerializeObject(apirequest);
-            //    request.JsonStringRequest = bindreq;
-            //    requestData = JsonConvert.SerializeObject(request);
-            //    request.JsonStringRequest = RijndaelCrypt.EncryptAES(bindreq, apimodel.dynamicKey, apimodel.hardCodeIV);
-            //    #endregion
-
-            //    var dataReturn = this.PostMobileAPI(request, apimodel.requestFilePath).Result;
-
-            //    var bindData = RijndaelCrypt.DecryptAES(dataReturn.JsonStringResponse, apimodel.dynamicKey, apimodel.hardCodeIV);
-            //    response = JsonConvert.DeserializeObject<OtherBrnchListModel>(bindData);
-            //    return response;
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    errormsg = ex.Message;
-            //    return response;
-            //}
-            //finally
-            //{
-            //    if (!string.IsNullOrEmpty(errormsg))
-            //    {
-            //        Log.Error(requestFilePath + " Error: " + errormsg);
-            //        Log.Error("Request:" + requestData);
-            //        Log.Error("Response:" + JsonConvert.SerializeObject(response));
-            //    }
-            //    else
-            //    {
-            //        Log.Info(requestFilePath + " Successful");
-            //        Log.Info("Request:" + requestData);
-            //        Log.Info("Response:" + JsonConvert.SerializeObject(response));
-            //    }
-            //}
         }
     }
 }
