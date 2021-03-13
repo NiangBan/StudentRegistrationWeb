@@ -111,6 +111,7 @@ namespace StudentRegistrationWeb.Controllers
                 {
                     requestModel.JsonStringRequest = RijndaelCrypt.EncryptAES(requestModel.JsonStringRequest, dynamicKey, hardCodeIV);
                     requestModel.SessionID = RijndaelCrypt.EncryptAES(requestModel.SessionID, hardCodeKey, hardCodeIV);
+                    requestModel.UserId = RijndaelCrypt.EncryptAES(requestModel.UserId, hardCodeKey, hardCodeIV);
                 }
                 
                 using (var client = new HttpClient())

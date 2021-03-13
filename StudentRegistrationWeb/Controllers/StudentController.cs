@@ -22,6 +22,8 @@ namespace StudentRegistrationWeb.Controllers
         {            
             try
             {
+                ViewBag.IsSuccess = TempData["RespCode"];
+                ViewBag.Message = TempData["RespDescription"];
                 var response = new StudentListModel();
                 #region BindRequestData
 
@@ -30,10 +32,10 @@ namespace StudentRegistrationWeb.Controllers
                 var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(request));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-                //Need to delete
-                Session[CommonSessionID] = sessionId;
-                Session[CommonUserID] = userId;
-                //
+                ////Need to delete
+                //Session[CommonSessionID] = sessionId;
+                //Session[CommonUserID] = userId;
+                ////
 
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
@@ -41,7 +43,7 @@ namespace StudentRegistrationWeb.Controllers
 
                 #region Post Api
 
-                var dataReturn = this.PostDataAPI(request, APIRoute.API_Student_List).Result;
+                var dataReturn = this.PostAPI(request, APIRoute.API_Student_List).Result;
 
                 #endregion
                 if (dataReturn.RespCode == "000")
@@ -69,12 +71,22 @@ namespace StudentRegistrationWeb.Controllers
         {
             return View("StudentList");
         }
+        
         public ActionResult StudentRegister()
         {
             var UniversityList =new UniversityListModel();
+            ViewBag.IsSuccess = TempData["RespCode"];
+            ViewBag.Message = TempData["RespDescription"];
+            
+            List<GenderModel> GenderList = new List<GenderModel>
+            {
+                new GenderModel{Id="Male" , Name = "Male"},
+                new GenderModel{Id="Female" , Name = "Female"}
+            };
 
-            UniversityList=SelectUniversity();
+            ViewBag.GenderList = GenderList;
 
+            UniversityList = SelectUniversity();
             var universityId = string.Empty;
             var marjorId = string.Empty;
             if (UniversityList.UniversityList.Count > 0)
@@ -124,7 +136,7 @@ namespace StudentRegistrationWeb.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult StudentRegister(StudentViewModel model)
+        public RedirectResult StudentRegister(StudentViewModel model)
         {            
             try
             {
@@ -145,7 +157,7 @@ namespace StudentRegistrationWeb.Controllers
                 studentReq.UniversityId = model.University;
                 studentReq.MajorId = model.Major;
                 studentReq.AcademicyearId = model.AcademicYear;
-                studentReq.Gender = "Female";
+                studentReq.Gender = model.Gender;
                 studentReq.CreatedDate = DateTime.Now.ToString();
                 studentReq.UpdatedDate = DateTime.Now.ToString();
                 studentReq.CreatedUserId = "1";
@@ -154,10 +166,10 @@ namespace StudentRegistrationWeb.Controllers
                 
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
                 
-                //Need to delete
-                Session[CommonSessionID] = sessionId;
-                Session[CommonUserID] = userId;
-                //
+                ////Need to delete
+                //Session[CommonSessionID] = sessionId;
+                //Session[CommonUserID] = userId;
+                ////
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
 
@@ -165,30 +177,51 @@ namespace StudentRegistrationWeb.Controllers
 
                 #region Post Api
 
-                var dataReturn = this.PostDataAPI(request, APIRoute.API_Student_Register).Result;
+                var dataReturn = this.PostAPI(request, APIRoute.API_Student_Register).Result;
 
                 #endregion
-
+                string redirectLink = "";
                 if (dataReturn.RespCode == "000")
                 {
                     StudentList();
-                    return View("StudentList");
+                    TempData["RespCode"] = "success";
+                    TempData["RespDescription"] = "Student Registration "+ dataReturn.RespDescription ;
+                    redirectLink = HtmlExtension.GetEncryptLinkForRedirect("StudentList", "Student");
+                    return Redirect(redirectLink);
+                }                
+                else
+                {
+                    ViewBag.IsSuccess = "fail";
+                    ViewBag.Message = dataReturn.RespDescription;
+                    TempData["RespCode"]="fail";
+                    TempData["RespDescription"]= "Student Registration : " + dataReturn.RespDescription; 
+                    redirectLink = HtmlExtension.GetEncryptLinkForRedirect("StudentRegister", "Student");
+                    return Redirect(redirectLink);
                 }
-                return View();
             }
             catch (Exception ex)
             {
-                return View();
+                return Redirect("");
             }
         }
         public ActionResult StudentUpdateByStudentId(StudentModel model)
         {
-
             var response = new StudentDTO();
             StudentViewModel studentViewModel = new StudentViewModel();
             var UniversityList = new UniversityListModel();
             try
             {
+                ViewBag.IsSuccess = TempData["RespCode"];
+                ViewBag.Message = TempData["RespDescription"];
+
+                List<GenderModel> GenderList = new List<GenderModel>
+                {
+                    new GenderModel{Id="Male" , Name = "Male"},
+                    new GenderModel{Id="Female" , Name = "Female"}
+                };
+
+                ViewBag.GenderList = GenderList;
+
                 #region BindRequestData
 
                 ApiRequestModel request = new ApiRequestModel();
@@ -197,10 +230,10 @@ namespace StudentRegistrationWeb.Controllers
                 var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentModel));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-                //Need to delete
-                Session[CommonSessionID] = sessionId;
-                Session[CommonUserID] = userId;
-                //
+                ////Need to delete
+                //Session[CommonSessionID] = sessionId;
+                //Session[CommonUserID] = userId;
+                ////
 
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
@@ -208,7 +241,7 @@ namespace StudentRegistrationWeb.Controllers
 
                 #region Post Api
 
-                var dataReturn = this.PostDataAPI(request, APIRoute.API_Get_StudentById).Result;
+                var dataReturn = this.PostAPI(request, APIRoute.API_Get_StudentById).Result;
 
                 #endregion
                 if (dataReturn.RespCode == "000")
@@ -289,7 +322,7 @@ namespace StudentRegistrationWeb.Controllers
             }
         }
         [HttpPost]
-        public ActionResult StudentUpdate(StudentViewModel model)
+        public RedirectResult StudentUpdate(StudentViewModel model)
         {
             try
             {
@@ -311,7 +344,7 @@ namespace StudentRegistrationWeb.Controllers
                 studentReq.UniversityId = model.University;
                 studentReq.MajorId = model.Major;
                 studentReq.AcademicyearId = model.AcademicYear;
-                studentReq.Gender = "Female";
+                studentReq.Gender = model.Gender;
                 studentReq.CreatedDate = DateTime.Now.ToString();
                 studentReq.UpdatedDate = DateTime.Now.ToString();
                 studentReq.CreatedUserId = "1";
@@ -320,10 +353,10 @@ namespace StudentRegistrationWeb.Controllers
 
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
                 
-                //Need to delete
-                Session[CommonSessionID] = sessionId;
-                Session[CommonUserID] = userId;
-                //
+                ////Need to delete
+                //Session[CommonSessionID] = sessionId;
+                //Session[CommonUserID] = userId;
+                ////
 
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
@@ -332,20 +365,32 @@ namespace StudentRegistrationWeb.Controllers
 
                 #region Post Api
 
-                var dataReturn = this.PostDataAPI(request, APIRoute.API_Student_Update).Result;
+                var dataReturn = this.PostAPI(request, APIRoute.API_Student_Update).Result;
 
                 #endregion
 
+                string redirectLink = "";
                 if (dataReturn.RespCode == "000")
                 {
                     StudentList();
-                    return View("StudentList");
+                    TempData["RespCode"] = "success";
+                    TempData["RespDescription"] = "Student Update " + dataReturn.RespDescription ;
+                    redirectLink = HtmlExtension.GetEncryptLinkForRedirect("StudentList", "Student");
+                    return Redirect(redirectLink);
                 }
-                return View();
+                else
+                {
+                    ViewBag.IsSuccess = "fail";
+                    ViewBag.Message = dataReturn.RespDescription;
+                    TempData["RespCode"] = "fail";
+                    TempData["RespDescription"] = "Student Update : " + dataReturn.RespDescription;
+                    redirectLink = HtmlExtension.GetEncryptLinkForRedirect("StudentUpdateByStudentId", "Student");
+                    return Redirect(redirectLink);
+                }
             }
             catch (Exception ex)
             {
-                return View();
+                return Redirect("");
             }
         }
 
@@ -364,10 +409,10 @@ namespace StudentRegistrationWeb.Controllers
 
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-                //Need to delete
-                Session[CommonSessionID] = sessionId;
-                Session[CommonUserID] = userId;
-                //
+                ////Need to delete
+                //Session[CommonSessionID] = sessionId;
+                //Session[CommonUserID] = userId;
+                ////
 
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
@@ -376,7 +421,7 @@ namespace StudentRegistrationWeb.Controllers
 
                 #region Post Api
 
-                var dataReturn = this.PostDataAPI(request, APIRoute.API_Student_Delete).Result;
+                var dataReturn = this.PostAPI(request, APIRoute.API_Student_Delete).Result;
 
                 #endregion
 
@@ -400,6 +445,13 @@ namespace StudentRegistrationWeb.Controllers
             var UniversityList = new UniversityListModel();
             try
             {
+                List<GenderModel> GenderList = new List<GenderModel>
+                {
+                    new GenderModel{Id="Male" , Name = "Male"},
+                    new GenderModel{Id="Female" , Name = "Female"}
+                };
+
+                ViewBag.GenderList = GenderList;
                 #region BindRequestData
 
                 ApiRequestModel request = new ApiRequestModel();
@@ -408,10 +460,10 @@ namespace StudentRegistrationWeb.Controllers
                 var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentModel));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-                //Need to delete
-                Session[CommonSessionID] = sessionId;
-                Session[CommonUserID] = userId;
-                //
+                ////Need to delete
+                //Session[CommonSessionID] = sessionId;
+                //Session[CommonUserID] = userId;
+                ////
 
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
@@ -419,7 +471,7 @@ namespace StudentRegistrationWeb.Controllers
 
                 #region Post Api
 
-                var dataReturn = this.PostDataAPI(request, APIRoute.API_Get_StudentById).Result;
+                var dataReturn = this.PostAPI(request, APIRoute.API_Get_StudentById).Result;
 
                 #endregion
                 if (dataReturn.RespCode == "000")
@@ -513,10 +565,10 @@ namespace StudentRegistrationWeb.Controllers
                 var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(request));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-                //Need to delete
-                Session[CommonSessionID] = sessionId;
-                Session[CommonUserID] = userId;
-                //
+                ////Need to delete
+                //Session[CommonSessionID] = sessionId;
+                //Session[CommonUserID] = userId;
+                ////
 
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
@@ -524,7 +576,7 @@ namespace StudentRegistrationWeb.Controllers
 
                 #region Post Api
 
-                var dataReturn = this.PostDataAPI(request, APIRoute.API_Get_UniversityList).Result;
+                var dataReturn = this.PostAPI(request, APIRoute.API_Get_UniversityList).Result;
 
                 #endregion
                 if (dataReturn.RespCode == "000")
@@ -588,10 +640,10 @@ namespace StudentRegistrationWeb.Controllers
                 var apirequest = JsonConvert.DeserializeObject<MajorModel>(JsonConvert.SerializeObject(majorModel));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-                //Need to delete
-                Session[CommonSessionID] = sessionId;
-                Session[CommonUserID] = userId;
-                //
+                ////Need to delete
+                //Session[CommonSessionID] = sessionId;
+                //Session[CommonUserID] = userId;
+                ////
 
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
@@ -599,7 +651,7 @@ namespace StudentRegistrationWeb.Controllers
 
                 #region Post Api
 
-                var dataReturn = this.PostDataAPI(request, APIRoute.API_Get_MajorList_UniId).Result;
+                var dataReturn = this.PostAPI(request, APIRoute.API_Get_MajorList_UniId).Result;
 
                 #endregion
                 if (dataReturn.RespCode == "000")
@@ -627,10 +679,10 @@ namespace StudentRegistrationWeb.Controllers
                 var apirequest = JsonConvert.DeserializeObject<AcademicYearModel>(JsonConvert.SerializeObject(academicYearModel));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
-                //Need to delete
-                Session[CommonSessionID] = sessionId;
-                Session[CommonUserID] = userId;
-                //
+                ////Need to delete
+                //Session[CommonSessionID] = sessionId;
+                //Session[CommonUserID] = userId;
+                ////
 
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
@@ -638,7 +690,7 @@ namespace StudentRegistrationWeb.Controllers
 
                 #region Post Api
 
-                var dataReturn = this.PostDataAPI(request, APIRoute.API_Get_AcademicList_MajorId).Result;
+                var dataReturn = this.PostAPI(request, APIRoute.API_Get_AcademicList_MajorId).Result;
 
                 #endregion
                 if (dataReturn.RespCode == "000")

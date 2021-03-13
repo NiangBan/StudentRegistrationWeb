@@ -23,7 +23,9 @@ namespace StudentRegistrationWeb.Controllers
         {
             LoginResposeModel res = new LoginResposeModel();
             LoginRequestModel req = new LoginRequestModel();
-
+            Session[CommonDynamicKey] = String.Empty;
+            Session[CommonUserID] = String.Empty;
+            Session[CommonSessionID] = String.Empty;
             try
             {
                 if (ModelState.IsValid)
@@ -81,7 +83,9 @@ namespace StudentRegistrationWeb.Controllers
         {
             AccountCreateResponseModel res = new AccountCreateResponseModel();
             AccountCreateRequestModel req = new AccountCreateRequestModel();
-
+            Session[CommonDynamicKey] = String.Empty;
+            Session[CommonUserID] = String.Empty;
+            Session[CommonSessionID] = String.Empty;
             try
             {
                 if (ModelState.IsValid)

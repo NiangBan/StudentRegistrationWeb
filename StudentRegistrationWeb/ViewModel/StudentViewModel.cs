@@ -39,9 +39,9 @@ namespace StudentRegistrationWeb.ViewModel
         [Required(ErrorMessage = "Please enter AcademicYear.")]
         [Display(Name = "AcademicYear", ResourceType = typeof(Resource))]
         public string AcademicYear { get; set; }
-        [Required(ErrorMessage = "Please enter Gender.")]
-        [Display(Name = "Gender", ResourceType = typeof(Resource))]
-        public string Gender { get; set; }
+        //[Required(ErrorMessage = "Please enter Gender.")]
+        //[Display(Name = "Gender", ResourceType = typeof(Resource))]
+        //public string Gender { get; set; }
         [Required(ErrorMessage = "Please enter DateOfBirth.")]
         [Display(Name = "DateOfBirth", ResourceType = typeof(Resource))]
         public string DateOfBirth { get; set; }
@@ -49,5 +49,16 @@ namespace StudentRegistrationWeb.ViewModel
         public int MajorID { get; set; }
         public int AcademicYearID { get; set; }
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Gender Required")]
+        [Display(Name = "Gender", ResourceType = typeof(Resource))]
+        public string Gender { get; set; }
+
+        public List<GenderModel> GenderList { get; set; }
+    }
+    public class GenderModel
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
 }

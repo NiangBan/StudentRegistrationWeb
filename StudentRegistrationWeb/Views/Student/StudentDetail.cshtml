@@ -1,4 +1,6 @@
-﻿@using StudentRegistrationWeb.Extension
+﻿
+@using StudentRegistrationWeb.ViewModel
+@using StudentRegistrationWeb.Extension
 @model StudentRegistrationWeb.ViewModel.StudentViewModel
 @{
     ViewBag.Title = "Student Detail";
@@ -81,15 +83,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 @*@Html.LabelFor(model => model.University)<br />
-                                <select id="FromAcc" class="form-control js-example-basic-single">
-                                    <option value="">Select</option>
-                                    @foreach (var uni in ViewBag.UniversityList)
-                                    {
-                                        <option value="@uni.Name" data-description="@uni.Name">
-                                            @uni.Name
-                                        </option>
-                                    }
-                                </select>*@
+                                    <select id="FromAcc" class="form-control js-example-basic-single">
+                                        <option value="">Select</option>
+                                        @foreach (var uni in ViewBag.UniversityList)
+                                        {
+                                            <option value="@uni.Name" data-description="@uni.Name">
+                                                @uni.Name
+                                            </option>
+                                        }
+                                    </select>*@
                                 @Html.LabelFor(model => model.University)
                                 @Html.DropDownListFor(model => model.University, ViewBag.UniversityList as IEnumerable<SelectListItem>, new { @class = "form-control js-example-basic-single", @id = "BankList", @required = "required", @disabled = "disabled" })
                                 @Html.HiddenFor(model => model.University, new { @id = "beneBank" })
@@ -100,15 +102,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 @*@Html.LabelFor(model => model.Major)<br />
-                                <select id="FromAcc" class="form-control js-example-basic-single">
-                                    <option value="">Select</option>
-                                    @foreach (var uni in ViewBag.UniversityList)
-                                    {
-                                        <option value="@uni.Name" data-description="@uni.Name">
-                                            @uni.Name
-                                        </option>
-                                    }
-                                </select>*@
+                                    <select id="FromAcc" class="form-control js-example-basic-single">
+                                        <option value="">Select</option>
+                                        @foreach (var uni in ViewBag.UniversityList)
+                                        {
+                                            <option value="@uni.Name" data-description="@uni.Name">
+                                                @uni.Name
+                                            </option>
+                                        }
+                                    </select>*@
                                 @Html.LabelFor(model => model.Major)
                                 @Html.DropDownListFor(model => model.Major, ViewBag.MajorList as IEnumerable<SelectListItem>, new { @class = "form-control js-example-basic-single", @id = "BankList", @required = "required", @disabled = "disabled" })
                                 @Html.HiddenFor(model => model.Major, new { @id = "beneBank" })
@@ -117,15 +119,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 @*@Html.LabelFor(model => model.AcademicYear)<br />
-                                <select id="FromAcc" class="form-control js-example-basic-single">
-                                    <option value="">Select</option>
-                                    @foreach (var uni in ViewBag.UniversityList)
-                                    {
-                                        <option value="@uni.Name" data-description="@uni.Name">
-                                            @uni.Name
-                                        </option>
-                                    }
-                                </select>*@
+                                    <select id="FromAcc" class="form-control js-example-basic-single">
+                                        <option value="">Select</option>
+                                        @foreach (var uni in ViewBag.UniversityList)
+                                        {
+                                            <option value="@uni.Name" data-description="@uni.Name">
+                                                @uni.Name
+                                            </option>
+                                        }
+                                    </select>*@
                                 @Html.LabelFor(model => model.AcademicYear)
                                 @Html.DropDownListFor(model => model.AcademicYear, ViewBag.AcademicList as IEnumerable<SelectListItem>, new { @class = "form-control js-example-basic-single", @id = "BankList", @required = "required", @disabled = "disabled" })
                                 @Html.HiddenFor(model => model.AcademicYear, new { @id = "beneBank" })
@@ -135,17 +137,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Gender)<br />
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                    <label class="form-check-label" for="inlineRadio1">Male</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                    <label class="form-check-label" for="inlineRadio2">Female</label>
-                                </div>
-                                @*@Html.TextBoxFor(model => model.Gender, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
-                                    @Html.ValidationMessageFor(model => model.Gender)*@
+                                @foreach (var gender in (List<GenderModel>)ViewBag.GenderList)
+                                {
+                                    <div>
+                                        @Html.RadioButtonFor(model => model.Gender, gender.Id, new { @disabled = "disabled" })
+                                        @Html.Label("Gender" + gender.Id, gender.Name)
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -171,7 +169,7 @@
                                         <input type="button" class="btn btn-primary" onclick="goBack()" value="Back" />
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
