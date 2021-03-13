@@ -5,7 +5,9 @@ using System.Web;
 
 namespace StudentRegistrationWeb.Models
 {
-    public class AccountCreateResponseModel : BaseResponseModel
+    public class BaseResponseModel
     {
+        public string RespCode { get; set; }
+        public string RespDescription { get; set; }
     }
 }

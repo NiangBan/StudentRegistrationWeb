@@ -80,35 +80,15 @@ namespace StudentRegistrationWeb.Controllers
             }
         }
 
-        protected string EncrypRequestObject(ApiRequestModel requestModel)
-        {
-            return this.Crypto.Encrypt(JsonConvert.SerializeObject(requestModel), CryptoUtils.EncryptionKey, CryptoUtils.EncryptionIV);
-        }
-        protected string EncryptUserRegisterRequestObject(AccountCreateRequestModel requestModel)
-        {
-            return this.Crypto.Encrypt(JsonConvert.SerializeObject(requestModel), CryptoUtils.EncryptionKey, CryptoUtils.EncryptionIV);
-        }
-        protected AccountCreateResponseModel DecryptUserRegisterResponseObject(string encryptString)
-        {
-            return JsonConvert.DeserializeObject<AccountCreateResponseModel>(this.Crypto.Decrypt(encryptString, CryptoUtils.EncryptionKey, CryptoUtils.EncryptionIV));
-        }
-
-        protected string EncryptOtherRequestObject(object obj, string dynamicKey, string dynamicIV)
-        {
-            return this.Crypto.Encrypt(JsonConvert.SerializeObject(obj), dynamicKey, dynamicIV);
-        }
-
         public ApiRequestModel APIRequest(string jsonString, object SessionID, object UserID,bool status)
         {
             ApiRequestModel model = new ApiRequestModel();
-            var sessionIDStr = SessionID.ToString();
-            var userIDStr = UserID.ToString();
             string hardCodeKey = CommonUtils.HardCodeKeyForAES();
             string hardCodeIV = CommonUtils.HardCodeIVForAES();
             
             model.JsonStringRequest = jsonString;
-            model.SessionID = status? RijndaelCrypt.DecryptAES(sessionIDStr, hardCodeKey, hardCodeIV) : string.Empty;
-            model.UserId = status ? RijndaelCrypt.DecryptAES(userIDStr, hardCodeKey, hardCodeIV) : string.Empty;
+            model.SessionID = status? RijndaelCrypt.DecryptAES(SessionID.ToString(), hardCodeKey, hardCodeIV) : string.Empty;
+            model.UserId = status ? RijndaelCrypt.DecryptAES(UserID.ToString(), hardCodeKey, hardCodeIV) : string.Empty;
             return model;
         }
 
@@ -121,16 +101,23 @@ namespace StudentRegistrationWeb.Controllers
             {
                 var hardCodeKey = CommonUtils.HardCodeKeyForAES();
                 var hardCodeIV = CommonUtils.HardCodeIVForAES();
-                //requestModel.UserId = RijndaelCrypt.EncryptAES(requestModel.UserId, hardCodeKey, hardCodeIV);
-                requestModel.SessionID = RijndaelCrypt.EncryptAES(requestModel.SessionID, hardCodeKey, hardCodeIV);
-                // path = "API/IB/IB_Profile";
+                string dynamicKey = Session[CommonDynamicKey].ToString();
+
+                if (string.IsNullOrEmpty(requestModel.UserId)  && string.IsNullOrEmpty(requestModel.SessionID) && string.IsNullOrEmpty(dynamicKey))
+                {
+                    requestModel.JsonStringRequest = this.Crypto.Encrypt(requestModel.JsonStringRequest, CryptoUtils.EncryptionKey, CryptoUtils.EncryptionIV);
+                }
+                else
+                {
+                    requestModel.JsonStringRequest = RijndaelCrypt.EncryptAES(requestModel.JsonStringRequest, dynamicKey, hardCodeIV);
+                    requestModel.SessionID = RijndaelCrypt.EncryptAES(requestModel.SessionID, hardCodeKey, hardCodeIV);
+                }
+                
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri(ConfigurationManager.AppSettings["domainapi"]);
-                    // client.BaseAddress = new Uri("http://localhost:8312/");
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.Timeout = new TimeSpan(1, 0, 0);
-
                     var postResponse = client.PostAsJsonAsync(path, requestModel).Result;
 
                     if (postResponse.IsSuccessStatusCode)
@@ -138,46 +125,20 @@ namespace StudentRegistrationWeb.Controllers
 
                         var data = await postResponse.Content.ReadAsStringAsync();
                         var responseModel = JsonConvert.DeserializeObject<ApiResponseModel>(data);
-
-
-                        //Log.Info("Request:" + JsonConvert.SerializeObject(responseModel));
-
-                        if (responseModel.RespCode == "000")
+                        if (string.IsNullOrEmpty(requestModel.UserId) && string.IsNullOrEmpty(requestModel.SessionID))
                         {
-                            //Log.Info(path + " API call successful.");
-                            
-                            return responseModel;
+                            responseModel.JsonStringResponse = this.Crypto.Decrypt(responseModel.JsonStringResponse, CryptoUtils.EncryptionKey, CryptoUtils.EncryptionIV);
                         }
-
-                        //to check response code for custom error message
-                        //switch (responseModel.RespCode)
+                        else
+                        {
+                            responseModel.JsonStringResponse = RijndaelCrypt.DecryptAES(responseModel.JsonStringResponse, dynamicKey, hardCodeIV);
+                        }
+                        //if (responseModel.RespCode == "000")
                         //{
-                        //    // if invalid key
-                        //    case "031":
-                        //        responseModel.IsSystemError = true;
-                        //        responseModel.SystemErrorURL = "~/Home/Error?errorCode=invalidkey";
-                        //        //HttpContext.Current.Response.Redirect("/Home/Error?errorCode=invalidkey", true);
-                        //        break;
+                        //    //Log.Info(path + " API call successful.");
 
-                        //    // if session timeout
-                        //    case "005":
-                        //        responseModel.IsSystemError = true;
-                        //        responseModel.SystemErrorURL = "~/Home/Error?errorCode=sessiontimeout";
-                        //        //HttpContext.Current.Response.Redirect("/Home/Error?errorCode=sessiontimeout", true);
-                        //        break;
-
-                        //    // if account is locked
-                        //    case "M113":
-                        //        responseModel.IsSystemError = true;
-                        //        responseModel.SystemErrorURL = "~/Home/Error?errorCode=accountlocked";
-                        //        break;
-
-                        //    // if account is locked
-                        //    case "M114":
-                        //        responseModel.IsSystemError = true;
-                        //        responseModel.SystemErrorURL = "~/Home/Error?errorCode=accountdeleted";
-                        //        break;
-
+                            
+                        //    return responseModel;
                         //}
                         return responseModel;
                     }

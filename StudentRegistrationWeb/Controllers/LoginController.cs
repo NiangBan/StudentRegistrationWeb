@@ -1,4 +1,5 @@
-﻿using StudentRegistrationWeb.Extension;
+﻿using Newtonsoft.Json;
+using StudentRegistrationWeb.Extension;
 using StudentRegistrationWeb.Models;
 using StudentRegistrationWeb.Utils;
 using StudentRegistrationWeb.ViewModel;
@@ -17,6 +18,58 @@ namespace StudentRegistrationWeb.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public ActionResult Login(LoginViewModel viewModel)
+        {
+            LoginResposeModel res = new LoginResposeModel();
+            LoginRequestModel req = new LoginRequestModel();
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    req.UserName = viewModel.UserName;
+                    Session["UserNameForSalted"] = viewModel.UserName;
+                    req.Password = CommonUtils.SHA256HexHashString(viewModel.Password);
+                    string jsonString = JsonConvert.SerializeObject(req);
+                    var apiRequestModel = this.APIRequest(jsonString, null, null, false);
+
+                    var dataReturn = this.PostAPI(apiRequestModel, APIRoute.API_User_Login).Result;
+                    var redirectLink = string.Empty;
+                    if (dataReturn != null)
+                    {
+                        res = JsonConvert.DeserializeObject<LoginResposeModel>(dataReturn.JsonStringResponse);
+                        if (res.RespCode == "000")
+                        {
+                            Session[CommonDynamicKey] = res.DynamicKey;
+                            Session[CommonUserID] = res.UserId;
+                            Session[CommonSessionID] = res.SessionId;
+                            redirectLink = HtmlExtension.GetEncryptLinkForRedirect("StudentList", "Student");
+                            Response.Redirect(redirectLink, false);
+                        }
+                        else
+                        {
+                            ViewBag.IsSuccess = "fail";
+                            ViewBag.Message = res.RespDescription;
+                        }
+                    }
+                }
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                /*errormsg = ex.Message;
+                TempData["Message"] = errormsg;
+                Log.Error($"Exception => {ex.Message} ");*/
+                return View(viewModel);
+            }
+
+            finally
+            {
+            }
+
+            return View();
+        }
 
         public ActionResult UserRegister()
         {
@@ -24,7 +77,7 @@ namespace StudentRegistrationWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveUser(UserViewModel userViewModel)
+        public ActionResult UserRegister(UserViewModel userViewModel)
         {
             AccountCreateResponseModel res = new AccountCreateResponseModel();
             AccountCreateRequestModel req = new AccountCreateRequestModel();
@@ -33,29 +86,35 @@ namespace StudentRegistrationWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var dynamicKey = CommonUtils.HardCodeKeyForAES();
-
+                    if (!userViewModel.Password.Equals(userViewModel.ConfirmPassword))
+                    {
+                        ViewBag.IsSuccess = "fail";
+                        ViewBag.Message = "Password and Confirm Password are not same.";
+                        return View(userViewModel);
+                    }
                     req.UserName = userViewModel.UserName;
                     req.Email = userViewModel.Email;
                     req.FullName = userViewModel.FullName;
                     Session["UserNameForSalted"] = userViewModel.UserName;
                     req.Password = CommonUtils.SHA256HexHashString(userViewModel.Password);
-                    string jsonString = EncryptUserRegisterRequestObject(req);
-                    var apiRequestModel = this.APIRequest(jsonString, null, null,false);
+                    string jsonString = JsonConvert.SerializeObject(req);
+                    var apiRequestModel = this.APIRequest(jsonString, null, null, false);
 
                     var dataReturn = this.PostAPI(apiRequestModel, APIRoute.API_User_Account_Register).Result;
-
-                    var ticketKey = CommonUtils.AESKeyForTicket();
-                    var ticketIV = CommonUtils.AESIVForTicket();
-                    res = this.DecryptUserRegisterResponseObject(dataReturn.JsonStringResponse);
-                    /*var respomseStr = CryptoUtils.DecryptAES(dataReturn.JsonStringResponse, dynamicKey, dynamicIv);
-                    if (string.IsNullOrEmpty(respomseStr))
+                    if (dataReturn != null)
                     {
-                        ModelState.AddModelError("", "System Error");
-                        return View(viewModel);
+                        res = JsonConvert.DeserializeObject<AccountCreateResponseModel>(dataReturn.JsonStringResponse);
+                        if (res.RespCode == "000")
+                        {
+                            ViewBag.IsSuccess = "success";
+                            ViewBag.Message = "User account creation is successful!";
+                        }
+                        else
+                        {
+                            ViewBag.IsSuccess = "fail";
+                            ViewBag.Message = res.RespDescription;
+                        }
                     }
-                    loginResponse = JsonConvert.DeserializeObject<LoginResponseModel>(respomseStr);*/
-
                 }
                 return View(userViewModel);
             }

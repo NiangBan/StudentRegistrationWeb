@@ -11,7 +11,7 @@ namespace StudentRegistrationWeb.Extension
     {
         public static String GetEncryptLinkForRedirect(string actionName, string ControllerName)
         {
-           return $@"~/{CommonUtils.Secure_Url_Prefix}/{HttpUtility.UrlEncode(new CryptoUtils().EncryptForExtension($"/{ControllerName}/{actionName}"), Encoding.UTF8)}";
+           return $@"/{HttpUtility.UrlEncode(new CryptoUtils().EncryptForExtension($"/{ControllerName}/{actionName}"), Encoding.UTF8)}";
         }
 
         public static String GetEncryptLink(string actionName, string ControllerName)
