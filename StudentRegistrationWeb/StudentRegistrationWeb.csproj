@@ -169,6 +169,9 @@
     <Compile Include="Models\AccountCreateResponseModel.cs" />
     <Compile Include="Models\APIRequestModel.cs" />
     <Compile Include="Models\ApiResponseModel.cs" />
+    <Compile Include="Models\BaseResponseModel.cs" />
+    <Compile Include="Models\LoginRequestModel.cs" />
+    <Compile Include="Models\LoginResposeModel.cs" />
     <Compile Include="Models\MajorModel.cs" />
     <Compile Include="Models\QueryStringModel.cs" />
     <Compile Include="Models\StudentModel.cs" />
