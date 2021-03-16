@@ -15,6 +15,8 @@ namespace StudentRegistrationWeb.ViewModel
         [Required(ErrorMessage = "Please enter Full Name.")]
         [Display(Name = "FullName", ResourceType = typeof(Resource))]
         public string FullName { get; set; }
+        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,4})+)$", ErrorMessageResourceType = typeof(Resource),
+                 ErrorMessageResourceName = "EmailInvalid")]
         [Required(ErrorMessage = "Please enter Email.")]
         [Display(Name = "Email", ResourceType = typeof(Resource))]
         public string Email { get; set; }

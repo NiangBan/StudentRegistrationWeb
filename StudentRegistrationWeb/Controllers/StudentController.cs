@@ -16,8 +16,8 @@ namespace StudentRegistrationWeb.Controllers
     public class StudentController : BaseController
     {
         // GET: Student
-        string sessionId = "ab123445333";
-        string userId = "83658c0f-62f8-4599-9982-9cdaf6b64985";        
+        string sessionId = string.Empty;
+        string userId = string.Empty;        
         public ActionResult StudentList()
         {            
             try

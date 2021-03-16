@@ -46,6 +46,7 @@ namespace StudentRegistrationWeb.Controllers
                             Session[CommonDynamicKey] = res.DynamicKey;
                             Session[CommonUserID] = res.UserId;
                             Session[CommonSessionID] = res.SessionId;
+                            Session[UserName] = res.UserName;
                             redirectLink = HtmlExtension.GetEncryptLinkForRedirect("StudentList", "Student");
                             Response.Redirect(redirectLink, false);
                         }

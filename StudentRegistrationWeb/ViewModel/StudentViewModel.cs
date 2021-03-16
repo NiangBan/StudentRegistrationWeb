@@ -22,9 +22,12 @@ namespace StudentRegistrationWeb.ViewModel
         [Display(Name = "Address", ResourceType = typeof(Resource))]
         public string Address { get; set; }
         [Required(ErrorMessage = "Please enter Phone.")]
+        [RegularExpression(@"^(\+?09\d{1,12})$", ErrorMessage = "Mobile Number should be start with 09.")]
         [Display(Name = "Phone", ResourceType = typeof(Resource))]
         public string Phone { get; set; }
         [Required(ErrorMessage = "Please enter Email.")]
+        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,4})+)$", ErrorMessageResourceType = typeof(Resource),
+                 ErrorMessageResourceName = "EmailInvalid")]
         [Display(Name = "Email", ResourceType = typeof(Resource))]
         public string Email { get; set; }
         [Required(ErrorMessage = "Please enter FatherName.")]

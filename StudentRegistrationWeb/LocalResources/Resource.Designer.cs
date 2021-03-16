@@ -106,6 +106,15 @@ namespace StudentRegistrationWeb.LocalResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid email address..
+        /// </summary>
+        public static string EmailInvalid {
+            get {
+                return ResourceManager.GetString("EmailInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Father Name.
         /// </summary>
         public static string FatherName {

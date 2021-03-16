@@ -35,6 +35,7 @@ namespace StudentRegistrationWeb.Controllers
         public string CommonDynamicKey = "DynemicKey";
         public string CommonSessionID = "SessionID";
         public string CommonUserID = "UserID";
+        public string UserName = "UserName";
 
 
         public BaseController()

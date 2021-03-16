@@ -18,7 +18,7 @@
                     </div>*@
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form action="@HtmlExtension.GetEncryptLink("UserRegister", "Login")" method="post" class="form-horizontal" , role="form" id="transferOwnForm">
+                    <form action="@HtmlExtension.GetEncryptLink("UserRegister", "Login")" method="post" class="form-horizontal" , role="form">
                         @Html.AntiForgeryToken()
                         @if (!ViewContext.ViewData.ModelState.IsValid)
                         {
@@ -28,7 +28,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.UserName)<br />
-                                    @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                    @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", id = "userName", @required = "required" })
                                     @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -37,7 +37,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.FullName)<br />
-                                    @Html.TextBoxFor(model => model.FullName, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                    @Html.TextBoxFor(model => model.FullName, new { @class = "form-control", id = "fullName", @required = "required" })
                                     @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Email)<br />
-                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", id = "email", @required = "required" })
                                     @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -55,7 +55,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Password)<br />
-                                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", id = "password", @required = "required" })
                                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.ConfirmPassword)<br />
-                                    @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                    @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control", id = "confirmPassword", @required = "required" })
                                     @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="pull-right">
-                                    <input type="button" class="btn btn-default" onclick="" value="Cancel" />
+                                    <input type="button" id="btnCancel" class="btn btn-default" value="Cancel" />
                                     <input type="submit" id="btnSave" class="btn btn-primary" value="Save" />
                                 </div>
                             </div>
@@ -115,6 +115,10 @@
             $('#myModal').modal('toggle');
             $('#myModal').modal('show');
         }
+    });
+    $('#btnCancel').click(function () {
+        var _link = '@HtmlExtension.GetEncryptLink("Login", "Login")';
+        window.location.href = _link;
     });
 
 </script>

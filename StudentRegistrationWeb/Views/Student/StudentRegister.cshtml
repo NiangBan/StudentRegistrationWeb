@@ -26,15 +26,17 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.StudentNo)<br />
-                                @Html.TextBoxFor(model => model.StudentNo, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                @Html.LabelFor(model => model.StudentNo)
+                                <br />
+                                @Html.TextBoxFor(model => model.StudentNo, new { @class = "form-control", id = "studentNo", @required = "required" })
                                 @Html.ValidationMessageFor(model => model.StudentNo, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Name) <br />
-                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
+                                @Html.LabelFor(model => model.Name)
+                                <br />
+                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @id = "name", @spellcheck = "false", @maxlength = 50 })
                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -42,15 +44,17 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.NRC)<br />
-                                @Html.TextBoxFor(model => model.NRC, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                @Html.LabelFor(model => model.NRC)
+                                <br />
+                                @Html.TextBoxFor(model => model.NRC, new { @class = "form-control", id = "nrc", @required = "required", @placeholder = "8/MaMaNa(N)123456" })
                                 @Html.ValidationMessageFor(model => model.NRC, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Address) <br />
-                                @Html.TextBoxFor(model => model.Address, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
+                                @Html.LabelFor(model => model.Address)
+                                <br />
+                                @Html.TextBoxFor(model => model.Address, new { @class = "form-control", @id = "address", @spellcheck = "false", @maxlength = 50 })
                                 @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -58,15 +62,17 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Phone)<br />
-                                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                @Html.LabelFor(model => model.Phone)
+                                <br />
+                                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", id = "phone", @required = "required" })
                                 @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Email) <br />
-                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
+                                @Html.LabelFor(model => model.Email)
+                                <br />
+                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @id = "email", @spellcheck = "false", @maxlength = 50 })
                                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -74,8 +80,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.FatherName)<br />
-                                @Html.TextBoxFor(model => model.FatherName, new { @class = "form-control", id = "txtAmount1", @onkeypress = "return restrictAlphabetsAmount(this,event)", @required = "required" })
+                                @Html.LabelFor(model => model.FatherName)
+                                <br />
+                                @Html.TextBoxFor(model => model.FatherName, new { @class = "form-control", id = "father", @required = "required" })
                                 @Html.ValidationMessageFor(model => model.FatherName, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -127,19 +134,17 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
+                            <div class="form-group row">
                                 @Html.LabelFor(model => model.DateOfBirth)
-                                @Html.TextBoxFor(model => model.DateOfBirth, new { @id = "todatepicker", @class = "form-control date-picker", @autocomplete = "off" })
+                                @Html.TextBoxFor(model => model.DateOfBirth, new { @id = "DateOfBirth", @class = "form-control datetimepicker-input col-10", @autocomplete = "off" })
+                                <div class="input-group-append col-2" data-target="#DateOfBirth" data-toggle="datetimepicker">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
                                 @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        @*<div class="col-md-4">
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.DateOfBirth) <br />
-                                    @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "form-control", @id = "txtdesp1", @spellcheck = "false", @maxlength = 50 })
-                                    @Html.ValidationMessageFor(model => model.DateOfBirth)
-                                </div>
-                            </div>*@
                     </div>
                     <div class="row">
                         <div class="col-12">
@@ -151,7 +156,7 @@
                                 </div>
                                 <div class="col-md-1" @*style="margin-right:40px"*@>
                                     <div class="form-group">
-                                        <input type="submit" id="btnOwnTransfer" class="btn btn-primary" value="Register" />
+                                        <input type="submit" id="btnOwnTransfer" onclick="gg()" class="btn btn-primary" value="Register" />
                                     </div>
                                 </div>
                             </div>
@@ -333,10 +338,18 @@
             $('#DESCRIPTION').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
         }
 
-        $('#todatepicker').datepicker({
-            changeMonth: false,
-            changeYear: false,
-            dateFormat: 'dd/mm/yy'
+        //$('#dateOfBirth').datepicker({
+        //    changeMonth: false,
+        //    changeYear: false,
+        //    dateFormat: 'dd/mm/yy'
+        //});
+
+        //$('#dateOfBirth').datepicker({
+        //    uiLibrary: 'bootstrap4',
+        //    dateFormat: 'dd/mm/yy'
+        //});
+        $('#DateOfBirth').datetimepicker({
+            format: 'L'
         });
     });
     function ShowMessage(text, type) {
@@ -365,14 +378,4 @@
         window.location.href =  '@HtmlExtension.GetEncryptLink("StudentList", "Student")';
     }
 </script>
-@*<script type="text/javascript">
-        $(document).ready(function () {
-            $('#todatepicker').datepicker({
-                changeMonth: false,
-                changeYear: false,
-                dateFormat: 'dd/mm/yy'
-            });
-        });
-
-    </script>*@
 
