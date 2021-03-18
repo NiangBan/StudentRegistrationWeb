@@ -113,17 +113,6 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                @*@Html.LabelFor(model => model.Gender)<br />
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                        <label class="form-check-label" for="inlineRadio1">Male</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                        <label class="form-check-label" for="inlineRadio2">Female</label>
-                                    </div>*@
-
-
                                 @foreach (var gender in (List<GenderModel>)ViewBag.GenderList)
                                 {
                                     <div>
@@ -149,12 +138,12 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="row">
-                                <div class="col-md-1" @*style="margin-right:40px"*@>
+                                <div class="col-md-1">
                                     <div class="form-group">
                                         <input type="button" class="btn btn-default" onclick="goBack()" value="Cancel" />
                                     </div>
                                 </div>
-                                <div class="col-md-1" @*style="margin-right:40px"*@>
+                                <div class="col-md-1">
                                     <div class="form-group">
                                         <input type="submit" id="btnOwnTransfer" onclick="gg()" class="btn btn-primary" value="Register" />
                                     </div>
@@ -337,17 +326,6 @@
             $('#DESCRIPTION').removeClass('input-validation-error');
             $('#DESCRIPTION').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass("field-validation-error").addClass("field-validation-valid").html("");
         }
-
-        //$('#dateOfBirth').datepicker({
-        //    changeMonth: false,
-        //    changeYear: false,
-        //    dateFormat: 'dd/mm/yy'
-        //});
-
-        //$('#dateOfBirth').datepicker({
-        //    uiLibrary: 'bootstrap4',
-        //    dateFormat: 'dd/mm/yy'
-        //});
         $('#DateOfBirth').datetimepicker({
             format: 'L'
         });

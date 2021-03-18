@@ -63,9 +63,6 @@ namespace StudentRegistrationWeb.Controllers
             }
             catch (Exception ex)
             {
-                /*errormsg = ex.Message;
-                TempData["Message"] = errormsg;
-                Log.Error($"Exception => {ex.Message} ");*/
                 return View(viewModel);
             }
 
@@ -129,9 +126,6 @@ namespace StudentRegistrationWeb.Controllers
             }
             catch (Exception ex)
             {
-                /*errormsg = ex.Message;
-                TempData["Message"] = errormsg;
-                Log.Error($"Exception => {ex.Message} ");*/
                 return View(userViewModel);
             }
 

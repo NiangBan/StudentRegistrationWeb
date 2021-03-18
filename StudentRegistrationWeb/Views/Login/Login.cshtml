@@ -10,37 +10,48 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 
-<body>
-    <div id="login" class="bg-image" 
+<div id="login" class="bg-image"
      style="background-image: url('../../Content/img/photo2.png');
             height: 100vh;">
-        <div class="container">
-            <div id="login-row" class="row justify-content-center align-items-center">
-                <div id="login-column" class="col-md-6">
-                    <div id="login-box" class="col-md-12">
-                        <form action="@HtmlExtension.GetEncryptLink("Login", "Login")" method="post" class="form" , id="login-form">
-                            <h3 class="text-center text-info">Login</h3>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.UserName, new { @class = "text-inf", @for = "userName" }) <br />
-                                @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @id = "userName", @maxlength = 50 })
-                                @Html.ValidationMessageFor(model => model.UserName)
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Password, new { @class = "text-inf", @for = "password" }) <br />
-                                @Html.PasswordFor(model => model.Password, new { @class = "form-control", @id = "password", @maxlength = 50 })
-                                @Html.ValidationMessageFor(model => model.Password)
-                            </div>
-                            <div class="form-group">
-                                <br />
-                                <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
-                            </div>
-                            <div id="register-link" class="text-right">
-                                <a href="@HtmlExtension.GetEncryptLink("UserRegister", "Login")" class="text-info">Register here</a>
-                            </div>
-                        </form>
-                    </div>
+    <div class="container">
+        <div id="login-row" class="row justify-content-center align-items-center">
+            <div id="login-column" class="col-md-6">
+                <div id="login-box" class="col-md-12">
+                    <form action="@HtmlExtension.GetEncryptLink("Login", "Login")" method="post" class="form" , id="login-form">
+                        <h3 class="text-center text-info">Login</h3>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.UserName, new { @class = "text-inf", @for = "userName" }) <br />
+                            @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @id = "userName", @maxlength = 50 })
+                            @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Password, new { @class = "text-inf", @for = "password" }) <br />
+                            @Html.PasswordFor(model => model.Password, new { @class = "form-control", @id = "password", @maxlength = 50 })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <br />
+                            <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
+                        </div>
+                        <div id="register-link" class="text-right">
+                            <a href="@HtmlExtension.GetEncryptLink("UserRegister", "Login")" class="text-info">Register here</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-</body>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#errorfrom').remove();
+        var modalSuccess = "@Html.Raw(@ViewBag.IsSuccess)";
+        var msg = "@Html.Raw(@ViewBag.Message)";
+        if (modalSuccess == "fail") {
+            $('#password').parent().append('<span class="text-danger field-validation-error" id="errorfrom">' + msg + '</span>');
+        } else {
+            $('#errorfrom').remove(); // remove it
+        }
+    });
+
+</script>

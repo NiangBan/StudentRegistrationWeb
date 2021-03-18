@@ -48,23 +48,6 @@ namespace StudentRegistrationWeb.Controllers
             get { return true; }
         }
 
-        //protected LoginResponseModel CurrentUserSession
-        //{
-        //    get
-        //    {
-        //        if (Session["CurrentUserSession"] == null)
-        //        {
-        //            return null;
-        //        }
-
-        //        return (LoginResponseModel)Session["CurrentUserSession"];
-        //    }
-        //    set
-        //    {
-        //        Session["CurrentUserSession"] = value;
-        //    }
-        //}
-
         protected void FormsAutheticationSignOutAndSessionAbandon()
         {
             if (HttpContext.CurrentHandler != null)
@@ -164,69 +147,6 @@ namespace StudentRegistrationWeb.Controllers
                 return resModel;
             }
         }
-
-        protected async Task<ApiResponseModel> PostDataAPI(ApiRequestModel requestModel, string path)
-        {
-            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            var resModel = new ApiResponseModel();
-
-            try
-            {
-                #region TestData
-                Session[CommonDynamicKey] = "aaaaa7";
-                var dynamicKey = Session[CommonDynamicKey].ToString();
-                #endregion
-                var hardCodeKey = CommonUtils.HardCodeKeyForAES();
-                var hardCodeIV = CommonUtils.HardCodeIVForAES();
-                //var dynamicKey = Session[CommonDynamicKey].ToString();
-                var commonKey = String.Empty;
-                if(!String.IsNullOrEmpty(dynamicKey))
-                {
-                    commonKey = dynamicKey;
-                }
-                else
-                {
-                    commonKey = hardCodeKey;
-                }
-                requestModel.JsonStringRequest = RijndaelCrypt.EncryptAES(requestModel.JsonStringRequest, commonKey, hardCodeIV);
-                requestModel.UserId = RijndaelCrypt.EncryptAES(requestModel.UserId, hardCodeKey, hardCodeIV);
-                requestModel.SessionID = RijndaelCrypt.EncryptAES(requestModel.SessionID, hardCodeKey, hardCodeIV);
-                
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["domainapi"]);
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    client.Timeout = new TimeSpan(1, 0, 0);
-
-                    var postResponse = client.PostAsJsonAsync(path, requestModel).Result;
-
-                    if (postResponse.IsSuccessStatusCode)
-                    {
-
-                        var data = await postResponse.Content.ReadAsStringAsync();
-                        var responseModel = JsonConvert.DeserializeObject<ApiResponseModel>(data);
-
-                        if (responseModel.RespCode == "000")
-                        {
-                            responseModel.JsonStringResponse = RijndaelCrypt.DecryptAES(responseModel.JsonStringResponse, commonKey, hardCodeIV);
-                            return responseModel;
-                        }
-                        return responseModel;
-                    }
-                    else
-                    {
-                        return resModel;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                resModel.RespCode = "014";
-                resModel.RespDescription = ex.Message;
-                return resModel;
-            }
-        }
-
 
     }
 }

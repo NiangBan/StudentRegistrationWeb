@@ -153,11 +153,6 @@ namespace StudentRegistrationWeb.Controllers
                 var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentReq));
                 
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
-                
-                ////Need to delete
-                //Session[CommonSessionID] = sessionId;
-                //Session[CommonUserID] = userId;
-                ////
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
 
@@ -350,12 +345,6 @@ namespace StudentRegistrationWeb.Controllers
                 var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentReq));
 
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
-                
-                ////Need to delete
-                //Session[CommonSessionID] = sessionId;
-                //Session[CommonUserID] = userId;
-                ////
-
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
 
@@ -406,12 +395,6 @@ namespace StudentRegistrationWeb.Controllers
                 var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentReq));
 
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
-
-                ////Need to delete
-                //Session[CommonSessionID] = sessionId;
-                //Session[CommonUserID] = userId;
-                ////
-
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
 
@@ -457,12 +440,6 @@ namespace StudentRegistrationWeb.Controllers
                 studentModel.Id = model.idString;
                 var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentModel));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
-
-                ////Need to delete
-                //Session[CommonSessionID] = sessionId;
-                //Session[CommonUserID] = userId;
-                ////
-
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
                 #endregion
@@ -562,12 +539,6 @@ namespace StudentRegistrationWeb.Controllers
 
                 var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(request));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
-
-                ////Need to delete
-                //Session[CommonSessionID] = sessionId;
-                //Session[CommonUserID] = userId;
-                ////
-
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
                 #endregion
@@ -637,12 +608,6 @@ namespace StudentRegistrationWeb.Controllers
                 majorModel.UniversityId = universityid;
                 var apirequest = JsonConvert.DeserializeObject<MajorModel>(JsonConvert.SerializeObject(majorModel));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
-
-                ////Need to delete
-                //Session[CommonSessionID] = sessionId;
-                //Session[CommonUserID] = userId;
-                ////
-
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
                 #endregion
@@ -676,12 +641,6 @@ namespace StudentRegistrationWeb.Controllers
                 academicYearModel.MajorId = majorid;
                 var apirequest = JsonConvert.DeserializeObject<AcademicYearModel>(JsonConvert.SerializeObject(academicYearModel));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
-
-                ////Need to delete
-                //Session[CommonSessionID] = sessionId;
-                //Session[CommonUserID] = userId;
-                ////
-
                 request.SessionID = Session[CommonSessionID].ToString();
                 request.UserId = Session[CommonUserID].ToString();
                 #endregion

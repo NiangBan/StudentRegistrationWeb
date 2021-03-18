@@ -149,7 +149,6 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\SampleController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Extension\CommonUtils.cs" />
     <Compile Include="Extension\CryptoUtils.cs" />
@@ -2410,7 +2409,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Sample\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
