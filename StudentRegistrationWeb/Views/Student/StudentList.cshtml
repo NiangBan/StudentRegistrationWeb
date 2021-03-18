@@ -7,69 +7,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*<div class="row">
-
-        <div class="col-12">
-            <form action="@HtmlExtension.GetEncryptLink("GetStudentListSearch", "Student")" method="post" class="form-fileupload" id="fromearch">
-
-                @Html.AntiForgeryToken()
-                @if (!ViewContext.ViewData.ModelState.IsValid)
-                {
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                }
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-2" style="margin-left:40px">
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.StudentName)
-                                    @Html.TextBoxFor(model => model.StudentName, new { @id = "txtStudentName", @class = "form-control", @autocomplete = "off" })
-                                    @Html.ValidationMessageFor(model => model.StudentName, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="col-md-2" style="margin-left:40px">
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.StudentNumber)
-                                    @Html.TextBoxFor(model => model.StudentNumber, new { @id = "txtStudentNo", @class = "form-control", @autocomplete = "off" })
-                                    @Html.ValidationMessageFor(model => model.StudentNumber, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="col-md-2" style="margin-left:40px">
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.FatherName)
-                                    @Html.TextBoxFor(model => model.FatherName, new { @id = "txtFatherName", @class = "form-control", @autocomplete = "off" })
-                                    @Html.ValidationMessageFor(model => model.FatherName, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                            <div class="col-md-2" style="margin-left:40px">
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Phone)
-                                    @Html.TextBoxFor(model => model.Phone, new { @id = "txtPhone", @class = "form-control", @autocomplete = "off" })
-                                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="col-md-1" style="margin-left:40px">
-                                <div class="form-group">
-                                    <input type="submit" class="btn btn-primary" style="margin-top: 32px; margin-right: 15px" value="@Resource.Search" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-    </div>*@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            @*<div class="card-header">
-                    <h3 class="card-title">DataTable with minimal features & hover style</h3>
-                </div>*@
-            <!-- /.card-header -->
             <div class="card-body">
                 <div class="table-responsive">
                     <table id="myTable" class="table table-striped table-bordered" style="width:100%">
@@ -133,6 +73,21 @@
     </form>
     <form action="@HtmlExtension.GetEncryptLink("StudentDeleteByStudentId", "Student")" method="post" class="form-horizontal" , role="form" id="formDelete">
         @Html.HiddenFor(model => model.idString, new { @id = "deleteId" })
+
+        <!-- Modal -->
+        <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Cancel" id="cancel" />
+                        <input type="button" class="btn btn-primary" value="OK" id="btnDelete" />
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
     <form action="@HtmlExtension.GetEncryptLink("StudentDetail", "Student")" method="post" class="form-horizontal" , role="form" id="formDetail">
         @Html.HiddenFor(model => model.idString, new { @id = "detailsId" })
@@ -159,6 +114,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+
         var modalSuccess = "@Html.Raw(@ViewBag.IsSuccess)";
         if (modalSuccess == "success") {
            $('#myModal').modal('toggle');
@@ -247,6 +203,9 @@
             checkLength();
         });
 
+        $("#btnDelete").on("click", function () {
+            $('#formDelete').submit();
+            });
         function updateDataTableSelectAllCtrl(table) {
             var $table = table.table().node();
             var $chkbox_all = $('tbody input[type="button"]', $table);
@@ -280,7 +239,7 @@
     }
     function getDelete(deleteStudentId) {
         $("#deleteId").val(deleteStudentId);
-        $('#formDelete').submit();
+        $('#DeleteModal').modal('show');
     }
     function getDetails(detailStudentId) {
         $("#detailsId").val(detailStudentId);

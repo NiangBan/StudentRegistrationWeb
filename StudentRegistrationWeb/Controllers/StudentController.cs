@@ -58,19 +58,6 @@ namespace StudentRegistrationWeb.Controllers
                 return View();
             }
         }
-
-        [AllowAnonymous]
-        public ActionResult GetStudentListSearch()
-        {
-            return View("StudentList");
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public ActionResult GetStudentListSearch(StudentModel student)
-        {
-            return View("StudentList");
-        }
         
         public ActionResult StudentRegister()
         {
@@ -135,6 +122,7 @@ namespace StudentRegistrationWeb.Controllers
             }
             return View();
         }
+
         [HttpPost]
         public RedirectResult StudentRegister(StudentViewModel model)
         {            
@@ -204,6 +192,7 @@ namespace StudentRegistrationWeb.Controllers
                 return Redirect("");
             }
         }
+
         public ActionResult StudentUpdateByStudentId(StudentModel model)
         {
             var response = new StudentDTO();
@@ -213,6 +202,7 @@ namespace StudentRegistrationWeb.Controllers
             {
                 ViewBag.IsSuccess = TempData["RespCode"];
                 ViewBag.Message = TempData["RespDescription"];
+                var studentId = TempData["StudentId"];
 
                 List<GenderModel> GenderList = new List<GenderModel>
                 {
@@ -226,7 +216,14 @@ namespace StudentRegistrationWeb.Controllers
 
                 ApiRequestModel request = new ApiRequestModel();
                 StudentDTO studentModel = new StudentDTO();
-                studentModel.Id = model.idString;
+                if(studentId != null)
+                {
+                    studentModel.Id = studentId.ToString();
+                }
+                else
+                {
+                    studentModel.Id = model.idString;
+                }                
                 var apirequest = JsonConvert.DeserializeObject<StudentDTO>(JsonConvert.SerializeObject(studentModel));
                 request.JsonStringRequest = JsonConvert.SerializeObject(apirequest);
 
@@ -321,6 +318,7 @@ namespace StudentRegistrationWeb.Controllers
                 return View();
             }
         }
+
         [HttpPost]
         public RedirectResult StudentUpdate(StudentViewModel model)
         {

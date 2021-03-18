@@ -14,11 +14,13 @@ namespace StudentRegistrationWeb.Controllers
     public class LoginController : BaseController
     {
         // GET: Login
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Login(LoginViewModel viewModel)
         {
             LoginResposeModel res = new LoginResposeModel();
@@ -74,12 +76,14 @@ namespace StudentRegistrationWeb.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult UserRegister()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult UserRegister(UserViewModel userViewModel)
         {
             AccountCreateResponseModel res = new AccountCreateResponseModel();
@@ -134,6 +138,13 @@ namespace StudentRegistrationWeb.Controllers
             finally
             {
             }
+        }
+
+        [AllowAnonymous]
+        public ActionResult Logout()
+        {
+            this.FormsAutheticationSignOutAndSessionAbandon();
+            return View("Login");
         }
     }
 }

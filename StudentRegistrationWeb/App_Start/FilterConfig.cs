@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using StudentRegistrationWeb.Filters;
+using System.Web;
 using System.Web.Mvc;
 
 namespace StudentRegistrationWeb
@@ -8,6 +9,7 @@ namespace StudentRegistrationWeb
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new AuthorizationFilter());
         }
     }
 }

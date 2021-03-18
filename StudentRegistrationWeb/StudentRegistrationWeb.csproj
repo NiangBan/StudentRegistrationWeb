@@ -154,6 +154,8 @@
     <Compile Include="Extension\CommonUtils.cs" />
     <Compile Include="Extension\CryptoUtils.cs" />
     <Compile Include="Extension\HtmlExtension.cs" />
+    <Compile Include="Filters\AuthorizationFilter.cs" />
+    <Compile Include="Filters\ErrorFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -231,6 +233,7 @@
     <Content Include="Content\img\avatar3.png" />
     <Content Include="Content\img\avatar4.png" />
     <Content Include="Content\img\avatar5.png" />
+    <Content Include="Content\img\bg.jpg" />
     <Content Include="Content\img\boxed-bg.jpg" />
     <Content Include="Content\img\boxed-bg.png" />
     <Content Include="Content\img\credit\american-express.png" />
@@ -2286,6 +2289,7 @@
     <Content Include="Content\plugins\summernote\summernote.js.map" />
     <Content Include="Content\plugins\summernote\summernote.min.js.map" />
     <Content Include="Content\plugins\toastr\toastr.js.map" />
+    <Content Include="libman.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
